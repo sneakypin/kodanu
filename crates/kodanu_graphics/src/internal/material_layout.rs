@@ -1,40 +1,49 @@
-use crate::GraphicsDevice;
+use crate::BindGroupLayout;
 
 use wgpu::{
-    BindGroupLayout, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BindingType,
-    BufferBindingType, ShaderStages,
+    BindGroupLayout as WgpuBindGroupLayout,
+    BindGroupLayoutDescriptor as WgpuBindGroupLayoutDescriptor,
+    BindGroupLayoutEntry as WgpuBindGroupLayoutEntry, BindingType as WgpuBindingType,
+    BufferBindingType as WgpuBufferBindingType, Device as WgpuDevice,
+    ShaderStages as WgpuShaderStages,
 };
 
-#[derive(Debug)]
+use std::any::Any;
+
 pub(crate) struct MaterialLayout {
-    bind_group_layout: BindGroupLayout,
+    layout: WgpuBindGroupLayout,
 }
 
 impl MaterialLayout {
-    pub fn new(graphics_device: &GraphicsDevice) -> Self {
-        let bind_group_layout =
-            graphics_device
-                .device()
-                .create_bind_group_layout(&BindGroupLayoutDescriptor {
-                    label: Some("Material Bind Group Layout"),
-                    entries: &[BindGroupLayoutEntry {
-                        binding: 0,
-                        visibility: ShaderStages::FRAGMENT,
-                        ty: BindingType::Buffer {
-                            ty: BufferBindingType::Uniform,
-                            has_dynamic_offset: false,
-                            min_binding_size: None,
-                        },
-                        count: None,
-                    }],
-                });
+    pub fn new(device: &WgpuDevice) -> Self {
+        let layout = device.create_bind_group_layout(&WgpuBindGroupLayoutDescriptor {
+            label: Some("Material Bind Group Layout"),
+            entries: &[WgpuBindGroupLayoutEntry {
+                binding: 0,
+                visibility: WgpuShaderStages::FRAGMENT,
+                ty: WgpuBindingType::Buffer {
+                    ty: WgpuBufferBindingType::Uniform,
+                    has_dynamic_offset: false,
+                    min_binding_size: None,
+                },
+                count: None,
+            }],
+        });
 
-        Self { bind_group_layout }
+        Self { layout }
     }
 }
 
-impl MaterialLayout {
-    pub fn bind_group_layout(&self) -> &BindGroupLayout {
-        &self.bind_group_layout
+impl BindGroupLayout for MaterialLayout {
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
+
+    fn get(&self) -> &WgpuBindGroupLayout {
+        &self.layout
+    }
+
+    fn group(&self) -> u32 {
+        1
     }
 }

@@ -1,6 +1,7 @@
-pub mod api;
-pub mod internal;
+mod app;
 
-pub use api::*;
+pub mod prelude {
+    pub use crate::App;
+}
 
-pub(crate) use internal::*;
+pub use app::*;

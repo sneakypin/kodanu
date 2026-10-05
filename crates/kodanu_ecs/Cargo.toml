@@ -7,4 +7,4 @@ edition = "2024"
 path = "src/_lib.rs"
 
 [dependencies]
-hashbrown = { workspace = true }
+macros = { path = "macros" }

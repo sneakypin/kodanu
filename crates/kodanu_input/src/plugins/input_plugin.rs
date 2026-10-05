@@ -1,29 +1,14 @@
-use crate::{ActionMap, Input};
+use crate::Input;
 
-use {
-    kodanu_ecs::{WorldCell, Write},
-    kodanu_math::Vec2,
-    kodanu_plugin::{Plugin, PluginRegistry},
-    kodanu_scheduler::Stage,
-};
+use kodanu_ecs::{Plugin, Registry, Stage};
 
 pub struct InputPlugin;
 
 impl Plugin for InputPlugin {
-    fn build(&self, app: &mut PluginRegistry) {
-        app.insert_resource(Input::with_capacity(128));
-        app.insert_resource(ActionMap::with_capacity(128));
-
-        app.add_system(Stage::PostRender, update_end_frame_system);
+    fn build(&self, registry: &mut impl Registry) {
+        registry
+            .with_res(Input::with_capacity(256))
+            .with_system(Stage::PreInputUpdate, Input::pre_input_system)
+            .with_system(Stage::PostInputUpdate, Input::post_input_system);
     }
-}
-
-#[inline]
-fn update_end_frame_system(world: WorldCell) {
-    let input = world.res::<Write<Input>>();
-
-    input.keyboard_mut().end_frame();
-    input.mouse_mut().end_frame();
-
-    input.set_mouse_wheel_delta(Vec2::ZERO);
 }

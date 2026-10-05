@@ -1,12 +1,14 @@
-#![allow(dead_code)]
+use rapier3d::prelude::{
+    ColliderBuilder as RapierColliderBuilder, ColliderHandle as RapierColliderHandle,
+    ColliderShape as RapierColliderShape,
+};
 
-use crate::rapier3d::*;
+use {kodanu_ecs::Component, kodanu_math::Vec3};
 
-use kodanu_math::Vec3;
-
+#[derive(Component, Debug)]
 pub struct Collider {
-    pub(crate) handle: Option<RapierColliderHandle>,
-    pub(crate) shape: RapierColliderShape,
+    handle: Option<RapierColliderHandle>,
+    shape: RapierColliderShape,
 }
 
 impl Default for Collider {
@@ -20,27 +22,27 @@ impl Default for Collider {
 
 impl Collider {
     pub fn cube(size: Vec3) -> Self {
-        let half_size = size * 0.5;
+        let half = size * 0.5;
 
-        Self {
-            handle: None,
-            shape: RapierColliderShape::cuboid(half_size.x, half_size.y, half_size.z),
-        }
+        Self::from(RapierColliderShape::cuboid(half.x, half.y, half.z))
     }
 
     pub fn triangle(a: Vec3, b: Vec3, c: Vec3) -> Self {
-        Self {
-            handle: None,
-            shape: RapierColliderShape::triangle(a, b, c),
-        }
+        Self::from(RapierColliderShape::triangle(a, b, c))
     }
 
     pub fn sphere(radius: f32) -> Self {
-        let radius = radius * 0.5;
-        Self {
-            handle: None,
-            shape: RapierColliderShape::ball(radius),
-        }
+        Self::from(RapierColliderShape::ball(radius * 0.5))
+    }
+}
+
+impl Collider {
+    pub fn handle(&self) -> Option<RapierColliderHandle> {
+        self.handle
+    }
+
+    pub fn shape(&self) -> &RapierColliderShape {
+        &self.shape
     }
 }
 
@@ -48,20 +50,17 @@ impl Collider {
     pub(crate) fn builder(&self) -> RapierColliderBuilder {
         RapierColliderBuilder::new(self.shape.clone())
     }
+
+    pub(crate) fn set_handle(&mut self, handle: Option<RapierColliderHandle>) {
+        self.handle = handle
+    }
 }
 
-impl Collider {
-    #[inline]
-    pub fn handle(&self) -> &Option<RapierColliderHandle> {
-        &self.handle
-    }
-
-    #[inline]
-    pub fn shape(&self) -> &RapierColliderShape {
-        &self.shape
-    }
-
-    pub(crate) fn set_handle(&mut self, handle: RapierColliderHandle) {
-        self.handle = Some(handle)
+impl From<RapierColliderShape> for Collider {
+    fn from(value: RapierColliderShape) -> Self {
+        Self {
+            handle: None,
+            shape: value,
+        }
     }
 }

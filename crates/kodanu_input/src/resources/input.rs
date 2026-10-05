@@ -1,103 +1,143 @@
-use crate::{ButtonState, KeyCode, MouseKey};
+use crate::{ActionMap, Axis, DeviceState};
 
-use kodanu_math::{DVec2, Vec2};
+use {
+    kodanu_ecs::{EventReader, ResMut, Resource},
+    kodanu_math::{MouseDelta, MousePosition, MouseScroll, MouseScrollDelta},
+};
 
-#[derive(Default)]
+pub use kodanu_window::{
+    Button, ButtonStatus, Key, KeyStatus, KeyboardEvent, MouseEvent, MouseWheelEvent,
+};
+
+#[derive(Resource, Default)]
 pub struct Input {
-    keyboard: ButtonState<KeyCode>,
-    mouse: ButtonState<MouseKey>,
-    mouse_position: DVec2,
-    mouse_wheel_delta: Vec2,
+    action_map: ActionMap,
+    keyboard: DeviceState<Key>,
+    mouse: DeviceState<Button>,
+    mouse_delta: MouseDelta,
+    mouse_wheel_delta: MouseScrollDelta,
+    mouse_position: Option<MousePosition>,
 }
 
 impl Input {
     pub fn with_capacity(capacity: usize) -> Self {
         Self {
-            keyboard: ButtonState::with_capacity(capacity),
-            mouse: ButtonState::with_capacity(capacity),
-            mouse_position: DVec2::ZERO,
-            mouse_wheel_delta: Vec2::ZERO,
+            action_map: ActionMap::with_capacity(capacity),
+            keyboard: DeviceState::with_capacity(capacity),
+            mouse: DeviceState::with_capacity(capacity),
+            mouse_delta: MouseDelta::default(),
+            mouse_wheel_delta: MouseScrollDelta::default(),
+            mouse_position: None,
         }
     }
 }
 
 impl Input {
-    #[inline]
-    pub fn key_pressed(&self, key: KeyCode) -> bool {
+    pub(crate) fn pre_input_system(
+        mut input: ResMut<Input>,
+        keyboard: EventReader<KeyboardEvent>,
+        mouse: EventReader<MouseEvent>,
+        position: EventReader<MousePosition>,
+        wheel: EventReader<MouseWheelEvent>,
+    ) {
+        for event in keyboard.iter() {
+            let key = event.key();
+
+            match event.state() {
+                KeyStatus::Pressed => {
+                    input.keyboard.press(key);
+                }
+                KeyStatus::Released => {
+                    input.keyboard.release(key);
+                }
+            }
+        }
+
+        for event in mouse.iter() {
+            let button = event.button();
+
+            match event.state() {
+                ButtonStatus::Pressed => {
+                    input.mouse.press(button);
+                }
+                ButtonStatus::Released => {
+                    input.mouse.release(button);
+                }
+            }
+        }
+
+        for event in position.iter() {
+            if let Some(pervious) = input.mouse_position {
+                input.mouse_delta += MouseDelta::from(*event - pervious);
+            }
+
+            input.mouse_position = Some(*event);
+        }
+
+        for event in wheel.iter() {
+            match event.delta() {
+                MouseScroll::Lines(lines) => {
+                    input.mouse_wheel_delta = MouseScrollDelta::new(
+                        lines.x() * MouseScrollDelta::DEFAULT_MULTIPLE,
+                        lines.y() * MouseScrollDelta::DEFAULT_MULTIPLE,
+                    )
+                }
+                MouseScroll::Pixels(pixels) => {
+                    input.mouse_wheel_delta = MouseScrollDelta::new(pixels.x(), pixels.y())
+                }
+            }
+        }
+    }
+
+    pub(crate) fn post_input_system(mut input: ResMut<Input>) {
+        input.keyboard.clear();
+        input.mouse.clear();
+
+        input.mouse_delta = MouseDelta::default();
+        input.mouse_wheel_delta = MouseScrollDelta::default();
+    }
+}
+
+impl Input {
+    pub fn axis(&self, axis: Axis) -> f32 {
+        self.action_map.axis(axis, self)
+    }
+
+    pub fn key_pressed(&self, key: Key) -> bool {
         self.keyboard.is_pressed(key)
     }
 
-    #[inline]
-    pub fn key_just_pressed(&self, key: KeyCode) -> bool {
+    pub fn key_just_pressed(&self, key: Key) -> bool {
         self.keyboard.is_just_pressed(key)
     }
 
-    #[inline]
-    pub fn key_released(&self, key: KeyCode) -> bool {
+    pub fn key_just_released(&self, key: Key) -> bool {
         self.keyboard.is_just_released(key)
     }
 
-    #[inline]
-    pub fn button_pressed(&self, button: MouseKey) -> bool {
+    pub fn button_pressed(&self, button: Button) -> bool {
         self.mouse.is_pressed(button)
     }
 
-    #[inline]
-    pub fn button_just_pressed(&self, button: MouseKey) -> bool {
+    pub fn button_just_pressed(&self, button: Button) -> bool {
         self.mouse.is_just_pressed(button)
     }
 
-    #[inline]
-    pub fn button_just_released(&self, button: MouseKey) -> bool {
+    pub fn button_just_released(&self, button: Button) -> bool {
         self.mouse.is_just_released(button)
     }
 }
 
 impl Input {
-    #[inline]
-    pub(crate) fn keyboard_mut(&mut self) -> &mut ButtonState<KeyCode> {
-        &mut self.keyboard
+    pub fn mouse_position(&self) -> Option<MousePosition> {
+        self.mouse_position
     }
 
-    #[inline]
-    pub(crate) fn mouse_mut(&mut self) -> &mut ButtonState<MouseKey> {
-        &mut self.mouse
+    pub fn mouse_delta(&self) -> MouseDelta {
+        self.mouse_delta
     }
 
-    #[inline]
-    pub(crate) fn set_mouse_position(&mut self, position: DVec2) {
-        self.mouse_position = position;
-    }
-
-    #[inline]
-    pub(crate) fn add_mouse_wheel_delta(&mut self, x: f32, y: f32) {
-        self.mouse_wheel_delta += Vec2::new(x, y);
-    }
-
-    #[inline]
-    pub(crate) fn set_mouse_wheel_delta(&mut self, delta: Vec2) {
-        self.mouse_wheel_delta = delta;
-    }
-}
-
-impl Input {
-    #[inline]
-    pub(crate) fn press_key(&mut self, key: KeyCode) {
-        self.keyboard.press(key);
-    }
-
-    #[inline]
-    pub(crate) fn release_key(&mut self, key: KeyCode) {
-        self.keyboard.release(key);
-    }
-
-    #[inline]
-    pub(crate) fn press_mouse_button(&mut self, button: MouseKey) {
-        self.mouse.press(button);
-    }
-
-    #[inline]
-    pub(crate) fn release_mouse_button(&mut self, button: MouseKey) {
-        self.mouse.release(button);
+    pub fn wheel_delta(&self) -> MouseScrollDelta {
+        self.mouse_wheel_delta
     }
 }

@@ -1,34 +1,34 @@
 #![allow(dead_code)]
 
-use crate::MaterialUniform;
+use crate::{Material, MaterialUniform};
 
 use wgpu::{
-    BindGroup, BindGroupDescriptor, BindGroupEntry, BindGroupLayout, Buffer, BufferUsages, Device,
-    util::{BufferInitDescriptor, DeviceExt},
+    BindGroup as WgpuBindGroup, BindGroupDescriptor as WgpuBindGroupDescriptor,
+    BindGroupEntry as WgpuBindGroupEntry, BindGroupLayout as WgpuBindGroupLayout,
+    Buffer as WgpuBuffer, BufferUsages as WgpuBufferUsages, Device as WgpuDevice,
 };
 
-use {bytemuck::bytes_of, kodanu_assets::Material};
+use wgpu::util::{BufferInitDescriptor as WgpuBufferInitDescriptor, DeviceExt as WgpuDeviceExt};
 
-#[derive(Debug)]
+use bytemuck::bytes_of;
+
 pub(crate) struct GpuMaterial {
-    buffer: Buffer,
-    bind_group: BindGroup,
+    buffer: WgpuBuffer,
+    bind_group: WgpuBindGroup,
 }
 
 impl GpuMaterial {
-    pub fn new(device: &Device, bind_group_layout: &BindGroupLayout, material: &Material) -> Self {
-        let uniform = MaterialUniform::from(material);
-
-        let buffer = device.create_buffer_init(&BufferInitDescriptor {
+    pub fn new(device: &WgpuDevice, layout: &WgpuBindGroupLayout, material: &Material) -> Self {
+        let buffer = device.create_buffer_init(&WgpuBufferInitDescriptor {
             label: Some("Material Buffer"),
-            contents: bytes_of(&uniform),
-            usage: BufferUsages::UNIFORM | BufferUsages::COPY_DST,
+            contents: bytes_of(&MaterialUniform::from(material)),
+            usage: WgpuBufferUsages::UNIFORM | WgpuBufferUsages::COPY_DST,
         });
 
-        let bind_group = device.create_bind_group(&BindGroupDescriptor {
+        let bind_group = device.create_bind_group(&WgpuBindGroupDescriptor {
             label: Some("Material Bind Group"),
-            layout: bind_group_layout,
-            entries: &[BindGroupEntry {
+            layout,
+            entries: &[WgpuBindGroupEntry {
                 binding: 0,
                 resource: buffer.as_entire_binding(),
             }],
@@ -39,12 +39,11 @@ impl GpuMaterial {
 }
 
 impl GpuMaterial {
-    pub fn buffer(&self) -> &Buffer {
+    pub fn buffer(&self) -> &WgpuBuffer {
         &self.buffer
     }
 
-    #[inline]
-    pub fn bind_group(&self) -> &BindGroup {
+    pub fn bind_group(&self) -> &WgpuBindGroup {
         &self.bind_group
     }
 }

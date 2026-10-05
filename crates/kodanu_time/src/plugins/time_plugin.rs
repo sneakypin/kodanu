@@ -1,31 +1,13 @@
 use crate::Time;
 
-use {
-    kodanu_ecs::{WorldCell, Write},
-    kodanu_plugin::{Plugin, PluginRegistry},
-    kodanu_scheduler::Stage,
-    web_time::Instant,
-};
+use kodanu_ecs::{Plugin, Registry, Stage};
 
 pub struct TimePlugin;
 
 impl Plugin for TimePlugin {
-    fn build(&self, app: &mut PluginRegistry) {
-        app.insert_resource(Time::default());
-
-        app.add_system(Stage::LateUpdate, update_time_system);
+    fn build(&self, registry: &mut impl Registry) {
+        registry
+            .with_res(Time::default())
+            .with_system(Stage::TimeUpdate, Time::time_system);
     }
-}
-
-#[inline]
-fn update_time_system(world: WorldCell) {
-    let time = world.res::<Write<Time>>();
-
-    let now = Instant::now();
-    let delta = now.duration_since(time.last);
-
-    time.delta = delta.min(time.max_delta);
-    time.elapsed = now.duration_since(time.startup);
-
-    time.last = now;
 }

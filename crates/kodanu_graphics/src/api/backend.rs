@@ -1,40 +1,43 @@
-use {bitflags::bitflags, wgpu::Backends};
+use bitflags::bitflags;
+
+use wgpu::Backends as WgpuBackends;
 
 bitflags! {
-    #[derive(Default, Debug, Clone, Copy, Eq, PartialEq, Hash)]
+    #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
     pub struct Backend: u32 {
         const VULKAN = 1 << 0;
         const METAL = 1 << 1;
-        const OPENGL = 1 << 2;
-        const DX12 = 1 << 3;
-        const WEBGPU = 1 << 4;
+        const DX12 = 1 << 2;
+        const WEBGPU = 1 << 3;
 
         const AUTO = Self::VULKAN.bits()
                     | Self::METAL.bits()
-                    | Self::OPENGL.bits()
                     | Self::DX12.bits()
                     | Self::WEBGPU.bits();
     }
 }
 
-impl From<Backend> for Backends {
+impl Default for Backend {
+    fn default() -> Self {
+        Self::VULKAN | Self::METAL | Self::DX12
+    }
+}
+
+impl From<Backend> for WgpuBackends {
     fn from(value: Backend) -> Self {
-        let mut backends = Backends::empty();
+        let mut backends = WgpuBackends::empty();
 
         if value.contains(Backend::VULKAN) {
-            backends |= Backends::VULKAN;
+            backends |= WgpuBackends::VULKAN;
         }
         if value.contains(Backend::METAL) {
-            backends |= Backends::METAL;
-        }
-        if value.contains(Backend::OPENGL) {
-            backends |= Backends::GL;
+            backends |= WgpuBackends::METAL;
         }
         if value.contains(Backend::DX12) {
-            backends |= Backends::DX12;
+            backends |= WgpuBackends::DX12;
         }
         if value.contains(Backend::WEBGPU) {
-            backends |= Backends::BROWSER_WEBGPU;
+            backends |= WgpuBackends::BROWSER_WEBGPU;
         }
 
         backends

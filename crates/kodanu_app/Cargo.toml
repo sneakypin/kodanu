@@ -7,18 +7,10 @@ edition = "2024"
 path = "src/_lib.rs"
 
 [dependencies]
-winit = { workspace = true }
-hashbrown = { workspace = true }
-tracing-subscriber = { workspace = true }
+pollster = { workspace = true }
 
 kodanu_window = { workspace = true }
-kodanu_graphics = { workspace = true }
-kodanu_input = { workspace = true }
-kodanu_math = { workspace = true }
-kodanu_time = { workspace = true }
-kodanu_editor = { workspace = true }
-kodanu_log = { workspace = true }
-kodanu_scheduler = { workspace = true }
 kodanu_ecs = { workspace = true }
-kodanu_camera = { workspace = true }
-kodanu_plugin = { workspace = true }
+kodanu_time = { workspace = true }
+kodanu_math = { workspace = true }
+kodanu_graphics = { workspace = true }

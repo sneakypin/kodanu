@@ -1,12 +1,14 @@
-#![allow(dead_code)]
+use rapier3d::prelude::{
+    RigidBodyBuilder as RapierRigidBodyBuilder, RigidBodyHandle as RapierRigidBodyHandle,
+    RigidBodyType as RapierRigidBodyType,
+};
 
-use crate::rapier3d::*;
+use {kodanu_ecs::Component, kodanu_transform::Transform};
 
-use kodanu_transform::Transform;
-
+#[derive(Component, Debug)]
 pub struct RigidBody {
-    pub(crate) handle: Option<RapierRigidBodyHandle>,
-    pub(crate) body_type: RapierRigidBodyType,
+    handle: Option<RapierRigidBodyHandle>,
+    body_type: RapierRigidBodyType,
 }
 
 impl Default for RigidBody {
@@ -16,25 +18,26 @@ impl Default for RigidBody {
 }
 
 impl RigidBody {
-    pub(crate) fn new(body: RapierRigidBodyType) -> Self {
-        Self {
-            handle: None,
-            body_type: body,
-        }
+    pub fn dynamic() -> Self {
+        Self::from(RapierRigidBodyType::Dynamic)
+    }
+
+    pub fn fixed() -> Self {
+        Self::from(RapierRigidBodyType::Fixed)
+    }
+
+    pub fn kinematic() -> Self {
+        Self::from(RapierRigidBodyType::KinematicPositionBased)
     }
 }
 
 impl RigidBody {
-    pub fn dynamic() -> Self {
-        Self::new(RapierRigidBodyType::Dynamic)
+    pub fn handle(&self) -> Option<RapierRigidBodyHandle> {
+        self.handle
     }
 
-    pub fn fixed() -> Self {
-        Self::new(RapierRigidBodyType::Fixed)
-    }
-
-    pub fn kinematic() -> Self {
-        Self::new(RapierRigidBodyType::KinematicPositionBased)
+    pub fn body_type(&self) -> RapierRigidBodyType {
+        self.body_type
     }
 }
 
@@ -46,20 +49,17 @@ impl RigidBody {
             .translation(transform.position())
             .rotation(axis * angle)
     }
+
+    pub(crate) fn set_handle(&mut self, handle: Option<RapierRigidBodyHandle>) {
+        self.handle = handle
+    }
 }
 
-impl RigidBody {
-    #[inline]
-    pub fn handle(&self) -> &Option<RapierRigidBodyHandle> {
-        &self.handle
-    }
-
-    #[inline]
-    pub fn body(&self) -> &RapierRigidBodyType {
-        &self.body_type
-    }
-
-    pub(crate) fn set_body(&mut self, body: RapierRigidBodyType) {
-        self.body_type = body
+impl From<RapierRigidBodyType> for RigidBody {
+    fn from(value: RapierRigidBodyType) -> Self {
+        Self {
+            handle: None,
+            body_type: value,
+        }
     }
 }

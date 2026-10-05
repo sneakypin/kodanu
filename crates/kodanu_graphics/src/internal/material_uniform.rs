@@ -1,26 +1,17 @@
-#![allow(dead_code)]
+use crate::Material;
 
-use {
-    bytemuck::{Pod, Zeroable},
-    kodanu_assets::Material,
-};
+pub use bytemuck::{Pod, Zeroable};
 
 #[repr(C)]
-#[derive(Debug, Clone, Copy, Pod, Zeroable)]
+#[derive(Default, Debug, Clone, Copy, Pod, Zeroable)]
 pub(crate) struct MaterialUniform {
-    base_color: [f32; 4],
-}
-
-impl MaterialUniform {
-    pub fn new(base_color: [f32; 4]) -> Self {
-        Self { base_color }
-    }
+    color: [f32; 4],
 }
 
 impl From<&Material> for MaterialUniform {
-    fn from(maerial: &Material) -> Self {
+    fn from(value: &Material) -> Self {
         Self {
-            base_color: maerial.color().value(),
+            color: value.color().get(),
         }
     }
 }

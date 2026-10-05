@@ -1,29 +1,29 @@
-use {bytemuck::cast_slice, kodanu_assets::Mesh};
+use crate::Mesh;
 
-use wgpu::{
-    Buffer, BufferUsages, Device,
-    util::{BufferInitDescriptor, DeviceExt},
-};
+use wgpu::{Buffer as WgpuBuffer, BufferUsages as WgpuBufferUsages, Device as WgpuDevice};
 
-#[derive(Debug)]
+use wgpu::util::{BufferInitDescriptor as WgpuBufferInitDescriptor, DeviceExt as WgpuDeviceExt};
+
+use bytemuck::cast_slice;
+
 pub(crate) struct GpuMesh {
-    vertex_buffer: Buffer,
-    index_buffer: Buffer,
+    vertex_buffer: WgpuBuffer,
+    index_buffer: WgpuBuffer,
     index_count: u32,
 }
 
 impl GpuMesh {
-    pub fn new(device: &Device, mesh: &Mesh) -> Self {
-        let vertex_buffer = device.create_buffer_init(&BufferInitDescriptor {
+    pub fn new(device: &WgpuDevice, mesh: &Mesh) -> Self {
+        let vertex_buffer = device.create_buffer_init(&WgpuBufferInitDescriptor {
             label: Some("Vertex Buffer"),
             contents: cast_slice(mesh.vertices()),
-            usage: BufferUsages::VERTEX,
+            usage: WgpuBufferUsages::VERTEX,
         });
 
-        let index_buffer = device.create_buffer_init(&BufferInitDescriptor {
+        let index_buffer = device.create_buffer_init(&WgpuBufferInitDescriptor {
             label: Some("Index Buffer"),
             contents: cast_slice(mesh.indices()),
-            usage: BufferUsages::INDEX,
+            usage: WgpuBufferUsages::INDEX,
         });
 
         let index_count = mesh.indices().len() as u32;
@@ -37,17 +37,14 @@ impl GpuMesh {
 }
 
 impl GpuMesh {
-    #[inline]
-    pub fn vertex_buffer(&self) -> &Buffer {
+    pub fn vertex_buffer(&self) -> &WgpuBuffer {
         &self.vertex_buffer
     }
 
-    #[inline]
-    pub fn index_buffer(&self) -> &Buffer {
+    pub fn index_buffer(&self) -> &WgpuBuffer {
         &self.index_buffer
     }
 
-    #[inline]
     pub fn index_count(&self) -> u32 {
         self.index_count
     }

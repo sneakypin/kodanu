@@ -1,12 +1,14 @@
-use web_time::{Duration, Instant};
+use std::time::{Duration, Instant};
 
-#[derive(Debug, Clone, Copy)]
+use kodanu_ecs::{ResMut, Resource};
+
+#[derive(Resource, Debug)]
 pub struct Time {
-    pub(crate) startup: Instant,
-    pub(crate) last: Instant,
-    pub(crate) delta: Duration,
-    pub(crate) elapsed: Duration,
-    pub(crate) max_delta: Duration,
+    startup: Instant,
+    last: Instant,
+    delta: Duration,
+    elapsed: Duration,
+    max_delta: Duration,
 }
 
 impl Default for Time {
@@ -24,12 +26,22 @@ impl Default for Time {
 }
 
 impl Time {
-    #[inline]
+    pub(crate) fn time_system(mut time: ResMut<Time>) {
+        let now = Instant::now();
+        let delta = now.duration_since(time.last);
+
+        time.delta = delta.min(time.max_delta);
+        time.elapsed = now.duration_since(time.startup);
+
+        time.last = now;
+    }
+}
+
+impl Time {
     pub fn delta(&self) -> f32 {
         self.delta.as_secs_f32()
     }
 
-    #[inline]
     pub fn elapsed(&self) -> f32 {
         self.elapsed.as_secs_f32()
     }

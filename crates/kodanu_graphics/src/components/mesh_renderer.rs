@@ -1,47 +1,55 @@
-use {
-    kodanu_assets::{Material, Mesh},
-    kodanu_color::Color,
-    std::sync::Arc,
-};
+use crate::{Color, Handle, Material, Mesh};
 
+use kodanu_ecs::Component;
+
+#[derive(Component, Debug)]
 pub struct MeshRenderer {
-    mesh: Arc<Mesh>,
-    material: Arc<Material>,
-}
-
-impl Default for MeshRenderer {
-    fn default() -> Self {
-        Self::new(Mesh::cube_2d(), Material::new(Color::WHITE))
-    }
+    mesh: Option<Mesh>,
+    mesh_handle: Option<Handle<Mesh>>,
+    material: Option<Material>,
+    material_handle: Option<Handle<Material>>,
 }
 
 impl MeshRenderer {
-    pub fn new(mesh: Mesh, material: Material) -> Self {
+    pub fn new(mesh: Option<Mesh>, material: Option<Material>) -> Self {
         Self {
-            mesh: Arc::new(mesh),
-            material: Arc::new(material),
+            mesh_handle: None,
+            mesh,
+            material_handle: None,
+            material,
         }
     }
 }
 
 impl MeshRenderer {
-    #[inline]
-    pub fn mesh(&self) -> &Mesh {
-        self.mesh.as_ref()
+    pub fn cube(color: Color) -> Self {
+        Self::new(Some(Mesh::cube()), Some(Material::from(color)))
+    }
+}
+
+impl MeshRenderer {
+    pub fn mesh_handle(&self) -> Option<Handle<Mesh>> {
+        self.mesh_handle
     }
 
-    #[inline]
-    pub fn mesh_handle(&self) -> Arc<Mesh> {
-        Arc::clone(&self.mesh)
+    pub fn take_mesh(&mut self) -> Option<Mesh> {
+        self.mesh.take()
     }
 
-    #[inline]
-    pub fn material(&self) -> &Material {
-        self.material.as_ref()
+    pub fn material_handle(&self) -> Option<Handle<Material>> {
+        self.material_handle
     }
 
-    #[inline]
-    pub fn material_handle(&self) -> Arc<Material> {
-        Arc::clone(&self.material)
+    pub fn take_material(&mut self) -> Option<Material> {
+        self.material.take()
+    }
+}
+impl MeshRenderer {
+    pub(crate) fn set_mesh_handle(&mut self, handle: Option<Handle<Mesh>>) {
+        self.mesh_handle = handle
+    }
+
+    pub(crate) fn set_material_handle(&mut self, handle: Option<Handle<Material>>) {
+        self.material_handle = handle
     }
 }

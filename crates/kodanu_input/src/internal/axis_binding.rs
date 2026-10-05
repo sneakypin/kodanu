@@ -1,24 +1,23 @@
-use crate::KeyCode;
+use kodanu_window::Key;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub(crate) struct AxisBinding {
-    positive: KeyCode,
-    negative: KeyCode,
+    positive: Key,
+    negative: Key,
 }
 
 impl AxisBinding {
-    pub fn new(positive: KeyCode, negative: KeyCode) -> Self {
+    pub fn new(positive: Key, negative: Key) -> Self {
         Self { positive, negative }
     }
 }
 
 impl AxisBinding {
-    #[inline]
-    pub fn positive(&self) -> KeyCode {
+    pub fn positive(&self) -> Key {
         self.positive
     }
 
-    #[inline]
-    pub fn negative(&self) -> KeyCode {
+    pub fn negative(&self) -> Key {
         self.negative
     }
 }

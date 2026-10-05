@@ -1,47 +1,45 @@
 use crate::Projection;
 
-use {kodanu_math::Mat4, kodanu_transform::Transform};
+use {
+    kodanu_ecs::Component,
+    kodanu_math::{Mat4, SurfaceSize},
+};
 
-#[derive(Default, Debug, Clone, Copy)]
+#[derive(Component, Default, Debug, Clone, Copy)]
 pub struct Camera {
     projection: Projection,
 }
 
 impl Camera {
-    pub fn new(projection: Projection) -> Self {
-        Self { projection }
-    }
-}
-
-impl Camera {
-    #[inline]
-    pub fn view_projection(&self, transform: &Transform) -> Mat4 {
-        self.projection.projection_matrix() * transform.view_matrix()
+    pub fn view_proj(&self, view_matrix: Mat4) -> Mat4 {
+        self.projection.projection_matrix() * view_matrix
     }
 
-    #[inline]
-    pub fn set_aspect_ratio(&mut self, aspect_ratio: f32) {
+    pub fn set_aspect(&mut self, aspect: f32) {
         match &mut self.projection {
-            Projection::Perspective(projection) => projection.set_aspect_ratio(aspect_ratio),
+            Projection::Perspective(projection) => projection.set_aspect_ratio(aspect),
         }
     }
 
-    #[inline]
-    pub fn set_viewport_size(&mut self, width: u32, height: u32) {
-        if height == 0 {
+    pub fn set_viewport(&mut self, size: SurfaceSize) {
+        if size.height() == 0 {
             return;
         }
 
-        self.set_aspect_ratio(width as f32 / height as f32);
+        self.set_aspect(size.width() as f32 / size.height() as f32);
     }
 
-    #[inline]
     pub fn projection_matrix(&self) -> Mat4 {
         self.projection.projection_matrix()
     }
 
-    #[inline]
-    pub fn projection(&self) -> &Projection {
-        &self.projection
+    pub fn projection(&self) -> Projection {
+        self.projection
+    }
+}
+
+impl From<Projection> for Camera {
+    fn from(value: Projection) -> Self {
+        Self { projection: value }
     }
 }

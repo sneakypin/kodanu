@@ -1,63 +1,47 @@
 [workspace]
 members = [
     "bin",
+    "crates/kodanu",
     "crates/kodanu_app",
-    "crates/kodanu_assets",
+    "crates/kodanu_camera",
     "crates/kodanu_ecs",
-    "crates/kodanu_editor",
     "crates/kodanu_graphics",
     "crates/kodanu_input",
+    "crates/kodanu_macros",
     "crates/kodanu_math",
+    "crates/kodanu_physics",
+    "crates/kodanu_plugins",
     "crates/kodanu_time",
     "crates/kodanu_transform",
     "crates/kodanu_window",
-    "crates/kodanu_camera",
-    "crates/kodanu_color",
-    "crates/kodanu_log",
-    "crates/kodanu",
-    "crates/kodanu_culling",
-    "crates/kodanu_scheduler",
-    "crates/kodanu_plugins",
-    "crates/kodanu_physics",
-    "crates/kodanu_plugin",
 ]
 
 resolver = "3"
 
 [workspace.dependencies]
 winit = { version = "0.31.0-beta.2" }
-wgpu = { version = "30.0.0" }
-glam = { version = "0.33.2"}
+wgpu = { version = "30.0.1" }
+
+glam = { version = "0.33.2", features = ["zerocopy"] }
 
 rapier3d = { version = "0.34.0", features = ["parallel", "simd-stable", "f32"]}
 
-anyhow = { version = "1.0.104" }
 bytemuck = { version = "1.25.2", features = ["derive"] }
 pollster = { version = "1.0.1" }
 bitflags = { version = "2.13.1" }
 
-tracing = { version = "0.1.44" }
-tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
-
-hashbrown = { version = "0.17.1" }
-web-time = { version = "1.1.0" }
+raw-window-handle = { version = "0.6.2" }
 
 kodanu = { package = "kodanu", path = "crates/kodanu" }
 kodanu_app = { package = "kodanu_app", path = "crates/kodanu_app" }
+kodanu_camera = { package = "kodanu_camera", path = "crates/kodanu_camera" }
+kodanu_ecs = { package = "kodanu_ecs", path = "crates/kodanu_ecs" }
 kodanu_graphics = { package = "kodanu_graphics", path = "crates/kodanu_graphics" }
 kodanu_input = { package = "kodanu_input", path = "crates/kodanu_input" }
+kodanu_macros = { package = "kodanu_macros", path = "crates/kodanu_macros" }
 kodanu_math = { package = "kodanu_math", path = "crates/kodanu_math" }
-kodanu_time = { package = "kodanu_time", path = "crates/kodanu_time" }
-kodanu_window = { package = "kodanu_window", path = "crates/kodanu_window" }
-kodanu_editor = { package = "kodanu_editor", path = "crates/kodanu_editor" }
-kodanu_ecs = { package = "kodanu_ecs", path = "crates/kodanu_ecs" }
-kodanu_assets = { package = "kodanu_assets", path = "crates/kodanu_assets" }
-kodanu_transform = { package = "kodanu_transform", path = "crates/kodanu_transform" }
-kodanu_camera = { package = "kodanu_camera", path = "crates/kodanu_camera" }
-kodanu_color = { package = "kodanu_color", path = "crates/kodanu_color" }
-kodanu_log = { package = "kodanu_log", path = "crates/kodanu_log" }
-kodanu_culling = { package = "kodanu_culling", path = "crates/kodanu_culling" }
-kodanu_scheduler = { package = "kodanu_scheduler", path = "crates/kodanu_scheduler" }
-kodanu_plugins = { package = "kodanu_plugins", path = "crates/kodanu_plugins" }
 kodanu_physics = { package = "kodanu_physics", path = "crates/kodanu_physics" }
-kodanu_plugin = { package = "kodanu_plugin", path = "crates/kodanu_plugin" }
+kodanu_plugins = { package = "kodanu_plugins", path = "crates/kodanu_plugins" }
+kodanu_time = { package = "kodanu_time", path = "crates/kodanu_time" }
+kodanu_transform = { package = "kodanu_transform", path = "crates/kodanu_transform" }
+kodanu_window = { package = "kodanu_window", path = "crates/kodanu_window" }

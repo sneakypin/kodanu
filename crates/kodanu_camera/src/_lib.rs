@@ -1,5 +1,9 @@
 mod api;
 mod components;
-mod plugins;
+mod resources;
 
-pub use {api::*, components::*, plugins::*};
+pub mod prelude {
+    pub use crate::{ActiveCamera, Camera, CameraSettings, PerspectiveProjection, Projection};
+}
+
+pub use {api::*, components::*, resources::*};

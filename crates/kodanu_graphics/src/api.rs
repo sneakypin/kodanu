@@ -1,13 +1,19 @@
-mod asset_resources;
+mod asset_server;
 mod backend;
-mod render_item;
-mod render_queue;
-mod renderer;
-mod renderer_config;
-mod sample_count;
+mod bind_group_layout;
+mod color;
+mod handle;
+mod instance;
+mod instance_descriptor;
+mod material;
+mod material_type;
+mod mesh;
+mod mesh_type;
+mod vertex;
 
 pub use {
-    asset_resources::AssetResources, backend::Backend, render_item::RenderItem,
-    render_queue::RenderQueue, renderer::Renderer, renderer_config::RendererConfig,
-    sample_count::SampleCount,
+    asset_server::AssetServer, backend::Backend, bind_group_layout::BindGroupLayout, color::Color,
+    handle::Handle, instance::Instance, instance_descriptor::InstanceDescriptor,
+    material::Material, material_type::MaterialType, mesh::Mesh, mesh_type::MeshType,
+    vertex::Vertex,
 };

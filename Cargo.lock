@@ -32,15 +32,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "aho-corasick"
-version = "1.1.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ddd31a130427c27518df266943a5308ed92d4b226cc639f5a8f1002816174301"
-dependencies = [
- "memchr",
-]
-
-[[package]]
 name = "allocator-api2"
 version = "0.2.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -258,9 +249,9 @@ checksum = "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801"
 
 [[package]]
 name = "cfg_aliases"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "613afe47fcd5fac7ccf1db93babcb082c5994d996f20b8b159f2ad1658eb5724"
+checksum = "f079e83a288787bcd14a6aea84cee5c87a67c5a3e660c30f557a3d24761b3527"
 
 [[package]]
 name = "codespan-reporting"
@@ -501,6 +492,8 @@ checksum = "7f22fb22f065b308be0d8724e3706c7fa3fc2a6c7d6899df4cad7860e7a75436"
 dependencies = [
  "approx",
  "libm",
+ "zerocopy",
+ "zerocopy-derive",
 ]
 
 [[package]]
@@ -589,8 +582,6 @@ version = "0.17.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ed5909b6e89a2db4456e54cd5f673791d7eca6732202bbf2a9cc504fe2f9b84a"
 dependencies = [
- "allocator-api2",
- "equivalent",
  "foldhash",
 ]
 
@@ -690,13 +681,12 @@ dependencies = [
 
 [[package]]
 name = "js-sys"
-version = "0.3.99"
+version = "0.3.104"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "142bc4740e452c1e57ade0cbc129f139c9093e354346f0872ef985f4f5cf5f11"
+checksum = "0e0c1080212aad755ea003d18543e8768dd432c48819efd73a7bf1e39b7a5a3a"
 dependencies = [
  "cfg-if",
  "futures-util",
- "once_cell",
  "wasm-bindgen",
 ]
 
@@ -732,19 +722,14 @@ name = "kodanu"
 version = "0.1.0"
 dependencies = [
  "kodanu_app",
- "kodanu_assets",
  "kodanu_camera",
- "kodanu_color",
  "kodanu_ecs",
- "kodanu_editor",
  "kodanu_graphics",
  "kodanu_input",
- "kodanu_log",
+ "kodanu_macros",
  "kodanu_math",
  "kodanu_physics",
- "kodanu_plugin",
  "kodanu_plugins",
- "kodanu_scheduler",
  "kodanu_time",
  "kodanu_transform",
  "kodanu_window",
@@ -754,28 +739,12 @@ dependencies = [
 name = "kodanu_app"
 version = "0.1.0"
 dependencies = [
- "hashbrown 0.17.1",
- "kodanu_camera",
  "kodanu_ecs",
- "kodanu_editor",
  "kodanu_graphics",
- "kodanu_input",
- "kodanu_log",
  "kodanu_math",
- "kodanu_plugin",
- "kodanu_scheduler",
  "kodanu_time",
  "kodanu_window",
- "tracing-subscriber",
- "winit",
-]
-
-[[package]]
-name = "kodanu_assets"
-version = "0.1.0"
-dependencies = [
- "bytemuck",
- "kodanu_color",
+ "pollster",
 ]
 
 [[package]]
@@ -783,43 +752,14 @@ name = "kodanu_camera"
 version = "0.1.0"
 dependencies = [
  "kodanu_ecs",
- "kodanu_input",
  "kodanu_math",
- "kodanu_plugin",
- "kodanu_scheduler",
- "kodanu_time",
- "kodanu_transform",
-]
-
-[[package]]
-name = "kodanu_color"
-version = "0.1.0"
-
-[[package]]
-name = "kodanu_culling"
-version = "0.1.0"
-dependencies = [
- "kodanu_math",
- "kodanu_transform",
 ]
 
 [[package]]
 name = "kodanu_ecs"
 version = "0.1.0"
 dependencies = [
- "hashbrown 0.17.1",
-]
-
-[[package]]
-name = "kodanu_editor"
-version = "0.1.0"
-dependencies = [
- "kodanu_camera",
- "kodanu_ecs",
- "kodanu_math",
- "kodanu_plugin",
- "kodanu_scheduler",
- "kodanu_transform",
+ "macros",
 ]
 
 [[package]]
@@ -828,13 +768,9 @@ version = "0.1.0"
 dependencies = [
  "bitflags",
  "bytemuck",
- "kodanu_assets",
- "kodanu_color",
+ "kodanu_camera",
  "kodanu_ecs",
- "kodanu_editor",
  "kodanu_math",
- "kodanu_plugin",
- "kodanu_scheduler",
  "kodanu_transform",
  "kodanu_window",
  "pollster",
@@ -845,75 +781,48 @@ dependencies = [
 name = "kodanu_input"
 version = "0.1.0"
 dependencies = [
- "hashbrown 0.17.1",
  "kodanu_ecs",
+ "kodanu_macros",
  "kodanu_math",
- "kodanu_plugin",
- "kodanu_scheduler",
- "winit",
+ "kodanu_window",
 ]
 
 [[package]]
-name = "kodanu_log"
+name = "kodanu_macros"
 version = "0.1.0"
-dependencies = [
- "tracing-subscriber",
-]
 
 [[package]]
 name = "kodanu_math"
 version = "0.1.0"
 dependencies = [
  "glam 0.33.2",
+ "kodanu_ecs",
 ]
 
 [[package]]
 name = "kodanu_physics"
 version = "0.1.0"
 dependencies = [
- "kodanu_assets",
- "kodanu_color",
  "kodanu_ecs",
  "kodanu_graphics",
  "kodanu_math",
- "kodanu_plugin",
- "kodanu_scheduler",
  "kodanu_transform",
  "rapier3d",
-]
-
-[[package]]
-name = "kodanu_plugin"
-version = "0.1.0"
-dependencies = [
- "hashbrown 0.17.1",
- "kodanu_ecs",
- "kodanu_scheduler",
 ]
 
 [[package]]
 name = "kodanu_plugins"
 version = "0.1.0"
 dependencies = [
- "kodanu_assets",
- "kodanu_color",
+ "kodanu_camera",
  "kodanu_ecs",
- "kodanu_editor",
  "kodanu_graphics",
  "kodanu_input",
  "kodanu_math",
  "kodanu_physics",
- "kodanu_plugin",
- "kodanu_scheduler",
  "kodanu_time",
  "kodanu_transform",
-]
-
-[[package]]
-name = "kodanu_scheduler"
-version = "0.1.0"
-dependencies = [
- "kodanu_ecs",
+ "kodanu_window",
 ]
 
 [[package]]
@@ -921,15 +830,13 @@ name = "kodanu_time"
 version = "0.1.0"
 dependencies = [
  "kodanu_ecs",
- "kodanu_plugin",
- "kodanu_scheduler",
- "web-time",
 ]
 
 [[package]]
 name = "kodanu_transform"
 version = "0.1.0"
 dependencies = [
+ "kodanu_ecs",
  "kodanu_math",
 ]
 
@@ -937,16 +844,11 @@ dependencies = [
 name = "kodanu_window"
 version = "0.1.0"
 dependencies = [
+ "kodanu_ecs",
  "kodanu_math",
- "wgpu",
+ "raw-window-handle",
  "winit",
 ]
-
-[[package]]
-name = "lazy_static"
-version = "1.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 
 [[package]]
 name = "libc"
@@ -1010,12 +912,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "616ec5685824bcc94416c6d4a7a446eea774a31efd7062c8480ba6fd06d7a6e5"
 
 [[package]]
-name = "matchers"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d1525a2a28c7f4fa0fc98bb91ae755d1e2d1505079e05539e35bc876b5d65ae9"
+name = "macros"
+version = "0.1.0"
 dependencies = [
- "regex-automata",
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
@@ -1140,15 +1042,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ee6cda3051665f1fb8d9e08fc35c96d5a244fb1be711a03b71118828afc9a873"
 dependencies = [
  "jni-sys 0.3.1",
-]
-
-[[package]]
-name = "nu-ansi-term"
-version = "0.50.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7957b9740744892f114936ab4a57b3f487491bbeafaf8083688b16841a4240e5"
-dependencies = [
- "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -1680,23 +1573,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "regex-automata"
-version = "0.4.14"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6e1dd4122fc1595e8162618945476892eefca7b88c52820e74af6262213cae8f"
-dependencies = [
- "aho-corasick",
- "memchr",
- "regex-syntax",
-]
-
-[[package]]
-name = "regex-syntax"
-version = "0.8.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dc897dd8d9e8bd1ed8cdad82b5966c3e0ecae09fb1907d58efaa013543185d0a"
-
-[[package]]
 name = "renderdoc-sys"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1830,15 +1706,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
-]
-
-[[package]]
-name = "sharded-slab"
-version = "0.1.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f40ca3c46823713e0d4209592e8d6e826aa57e928f09752619fc696c499637f6"
-dependencies = [
- "lazy_static",
 ]
 
 [[package]]
@@ -2033,15 +1900,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "thread_local"
-version = "1.1.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f60246a4944f24f6e018aa17cdeffb7818b76356965d03b07d6a9886e8962185"
-dependencies = [
- "cfg-if",
-]
-
-[[package]]
 name = "tiny-skia"
 version = "0.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2112,39 +1970,6 @@ name = "tracing-core"
 version = "0.1.36"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "db97caf9d906fbde555dd62fa95ddba9eecfd14cb388e4f491a66d74cd5fb79a"
-dependencies = [
- "once_cell",
- "valuable",
-]
-
-[[package]]
-name = "tracing-log"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ee855f1f400bd0e5c02d150ae5de3840039a3f54b025156404e34c23c03f47c3"
-dependencies = [
- "log",
- "once_cell",
- "tracing-core",
-]
-
-[[package]]
-name = "tracing-subscriber"
-version = "0.3.23"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cb7f578e5945fb242538965c2d0b04418d38ec25c79d160cd279bf0731c8d319"
-dependencies = [
- "matchers",
- "nu-ansi-term",
- "once_cell",
- "regex-automata",
- "sharded-slab",
- "smallvec",
- "thread_local",
- "tracing",
- "tracing-core",
- "tracing-log",
-]
 
 [[package]]
 name = "ttf-parser"
@@ -2177,12 +2002,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b4ac048d71ede7ee76d585517add45da530660ef4390e49b098733c6e897f254"
 
 [[package]]
-name = "valuable"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ba73ea9cf16a25df0c8caa16c51acb937d5712a8429db78a3ee29d5dcacd3a65"
-
-[[package]]
 name = "version_check"
 version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2209,9 +2028,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen"
-version = "0.2.122"
+version = "0.2.127"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3ed04576f974d2b2fba0f38c51dbc5518011e38c36bf1143164be765528fd409"
+checksum = "1b70935747edd64d89de3efa29d73789b806c15798f8e7dca4d8ac356b50ce70"
 dependencies = [
  "cfg-if",
  "once_cell",
@@ -2222,9 +2041,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-futures"
-version = "0.4.72"
+version = "0.4.77"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9473dbd2991ae90b6291c3c32c30c6187ac49aa32f9905d1cce280ec1e110b0f"
+checksum = "6b7777d5cc23d0e91404e53ce2d5e8ec7acae3026b16233dba62cd3246457950"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
@@ -2232,9 +2051,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-macro"
-version = "0.2.122"
+version = "0.2.127"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "916151b09da36bd82f6615cbf3a419e2f0ba23a03c6160e8e92eb6bd4aa1dec6"
+checksum = "77775f8f3f7217702089053b94958f8f54061a3f663417df76e19cbdcca29bc1"
 dependencies = [
  "quote",
  "wasm-bindgen-macro-support",
@@ -2242,9 +2061,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-macro-support"
-version = "0.2.122"
+version = "0.2.127"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "299047362ccbfce148b67ab7e73349f77748e00c8296f9542adfad2ad82c5c5e"
+checksum = "e11d33f857dc2fb11b8bc75aee111aa9cbeb12cd9f25efd3d4c2a3dd4e235284"
 dependencies = [
  "bumpalo",
  "proc-macro2",
@@ -2255,9 +2074,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-shared"
-version = "0.2.122"
+version = "0.2.127"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9a929b2c61f11ba3e9bc35b50c1f25cb38e0e892c0c231ae2b8cf78d5dad4437"
+checksum = "7ef64dbcc55df09c7e5a46182d181c2cfa3e925f3da937ea764728b4bbb9dcbf"
 dependencies = [
  "unicode-ident",
 ]
@@ -2399,9 +2218,9 @@ dependencies = [
 
 [[package]]
 name = "web-sys"
-version = "0.3.99"
+version = "0.3.104"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6d621441cfc37b84979402712047321980c178f299193a3589d05b99e8763436"
+checksum = "c435338968042f4f59a557f690a253676d47ce13ceb55d70100e7facf6620a30"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
@@ -2419,9 +2238,9 @@ dependencies = [
 
 [[package]]
 name = "wgpu"
-version = "30.0.0"
+version = "30.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6d8f4bd44d92da5270f03409dba9f952dab24f128e05d6a554926101d1bf9114"
+checksum = "527ccdf43dd5b2e8676eed9984ce00e2bbb0a1b85b70c1969dcb6cd2eb55ab9e"
 dependencies = [
  "arrayvec",
  "bitflags",

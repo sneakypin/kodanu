@@ -1,3 +1,4 @@
+mod direct_light;
 mod mesh_renderer;
 
-pub use mesh_renderer::MeshRenderer;
+pub use {direct_light::DirectLight, mesh_renderer::MeshRenderer};

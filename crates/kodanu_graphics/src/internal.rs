@@ -1,31 +1,38 @@
+mod asset_slot;
+mod asset_storage;
+mod camera_layout;
 mod camera_renderer;
 mod camera_uniform;
-mod frame_resources;
+mod depth_view;
 mod gpu_material;
 mod gpu_mesh;
-mod graphics_device;
-mod graphics_pipeline;
-mod material_cache;
+mod gpu_model;
+mod instance_error;
+mod light_layout;
+mod light_renderer;
+mod light_uniform;
 mod material_layout;
 mod material_uniform;
-mod mesh_cache;
-mod model_storage_buffer;
+mod model_layout;
 mod model_uniform;
-mod render_surface;
-mod render_texture;
-mod render_texture_descriptor;
+mod msaa_view;
+mod pipeline_layout_storage;
+mod pipeline_layout_storage_error;
+mod render_item;
+mod render_pass;
+mod render_pipeline;
+mod render_queue;
 mod shader_storage;
-mod vertex_layout;
-mod wgpu_init;
 
 pub(crate) use {
-    camera_renderer::CameraRenderer, camera_uniform::CameraUniform,
-    frame_resources::FrameResources, gpu_material::GpuMaterial, gpu_mesh::GpuMesh,
-    graphics_device::GraphicsDevice, graphics_pipeline::GraphicsPipeline,
-    material_cache::MaterialCache, material_layout::MaterialLayout,
-    material_uniform::MaterialUniform, mesh_cache::MeshCache,
-    model_storage_buffer::ModelSrorageBuffer, model_uniform::ModelUniform,
-    render_surface::RenderSurface, render_texture::RenderTexture,
-    render_texture_descriptor::RenderTextureDescriptor, shader_storage::ShaderStorage,
-    vertex_layout::VertexLayout, wgpu_init::WgpuInit,
+    asset_slot::AssetSlot, asset_storage::AssetStorage, camera_layout::CameraLayout,
+    camera_renderer::CameraRenderer, camera_uniform::CameraUniform, depth_view::DepthView,
+    gpu_material::GpuMaterial, gpu_mesh::GpuMesh, gpu_model::GpuModel,
+    instance_error::InstanceError, light_layout::LightLayout, light_renderer::LightRenderer,
+    light_uniform::LightUniform, material_layout::MaterialLayout,
+    material_uniform::MaterialUniform, model_layout::ModelLayout, model_uniform::ModelUniform,
+    msaa_view::MsaaView, pipeline_layout_storage::PipelineLayoutStorage,
+    pipeline_layout_storage_error::PipelineLayoutStorageError, render_item::RenderItem,
+    render_pass::RenderPass, render_pipeline::RenderPipeline, render_queue::RenderQueue,
+    shader_storage::ShaderStorage,
 };
