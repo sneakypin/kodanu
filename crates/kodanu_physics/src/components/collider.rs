@@ -3,6 +3,8 @@ use rapier3d::prelude::{
     ColliderShape as RapierColliderShape,
 };
 
+pub use rapier3d::math::Vec3 as RapierVec3;
+
 use {kodanu_ecs::Component, kodanu_math::Vec3};
 
 #[derive(Component, Debug)]
@@ -28,7 +30,11 @@ impl Collider {
     }
 
     pub fn triangle(a: Vec3, b: Vec3, c: Vec3) -> Self {
-        Self::from(RapierColliderShape::triangle(a, b, c))
+        Self::from(RapierColliderShape::triangle(
+            RapierVec3::new(a.x, a.y, a.z),
+            RapierVec3::new(b.x, b.y, b.z),
+            RapierVec3::new(c.x, c.y, c.z),
+        ))
     }
 
     pub fn sphere(radius: f32) -> Self {

@@ -1,4 +1,4 @@
-use kodanu_math::{Mat4, perspective};
+use kodanu_math::Mat4;
 
 #[derive(Debug, Clone, Copy)]
 pub struct PerspectiveProjection {
@@ -17,7 +17,7 @@ impl Default for PerspectiveProjection {
 impl PerspectiveProjection {
     pub fn new(fov: f32, aspect: f32, near: f32, far: f32) -> Self {
         Self {
-            fov: fov.to_radians(),
+            fov,
             aspect,
             near,
             far,
@@ -31,7 +31,7 @@ impl PerspectiveProjection {
     }
 
     pub fn projection_matrix(&self) -> Mat4 {
-        perspective(self.fov, self.aspect, self.near, self.far)
+        Mat4::perspective_rh(self.fov, self.aspect, self.near, self.far)
     }
 
     pub fn fov(&self) -> f32 {

@@ -9,8 +9,8 @@ pub struct WorldCell<'w> {
 }
 
 impl<'w> WorldCell<'w> {
-    pub fn spawn_bundle<B: Bundle>(self, bundle: B) -> Entity {
-        unsafe { (*self.world.as_ptr()).spawn_bundle(bundle) }
+    pub fn spawn<B: Bundle>(self, bundle: B) -> Entity {
+        unsafe { (*self.world.as_ptr()).spawn(bundle) }
     }
 
     pub fn despawn(self, entity: Entity) -> bool {

@@ -7,6 +7,4 @@ edition = "2024"
 path = "src/_lib.rs"
 
 [dependencies]
-glam = { workspace = true }
-
 kodanu_ecs = { workspace = true }

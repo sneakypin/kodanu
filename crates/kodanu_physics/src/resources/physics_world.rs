@@ -4,9 +4,11 @@ use rapier3d::prelude::{
     PhysicsWorld as RapierPhysicsWorld, Pose3 as RapierPose3, RigidBodyType as RapierRigidBodyType,
 };
 
+use rapier3d::math::{Rot3 as RapierRot3, Vec3 as RapierVec3};
+
 pub use {
     kodanu_ecs::{Query, Read, Res, ResMut, Resource, Write},
-    kodanu_math::Vec3,
+    kodanu_math::{Quat, Vec3},
     kodanu_transform::Transform,
 };
 
@@ -17,7 +19,7 @@ pub struct PhysicsWorld {
 
 impl PhysicsWorld {
     pub fn set_gravity(&mut self, gravity: Vec3) {
-        self.physics.gravity = Vec3::new(gravity.x, gravity.y, gravity.z);
+        self.physics.gravity = RapierVec3::new(gravity.x, gravity.y, gravity.z);
     }
 
     pub fn remove_rigid_body(&mut self, body: RigidBody) {
@@ -87,7 +89,19 @@ impl PhysicsWorld {
 
             let position = body.position();
 
-            transform.set_position_and_rotation(position.translation, position.rotation);
+            transform.set_position_and_rotation(
+                Vec3::new(
+                    position.translation.x,
+                    position.translation.y,
+                    position.translation.z,
+                ),
+                Quat::new(
+                    position.rotation.x,
+                    position.rotation.y,
+                    position.rotation.z,
+                    position.rotation.w,
+                ),
+            );
         }
     }
 
@@ -109,8 +123,17 @@ impl PhysicsWorld {
             };
 
             body.set_next_kinematic_position(RapierPose3::from_parts(
-                transform.position(),
-                transform.rotation(),
+                RapierVec3::new(
+                    transform.position().x,
+                    transform.position().y,
+                    transform.position().z,
+                ),
+                RapierRot3::from_xyzw(
+                    transform.rotation().x,
+                    transform.rotation().y,
+                    transform.rotation().z,
+                    transform.rotation().w,
+                ),
             ));
         }
     }

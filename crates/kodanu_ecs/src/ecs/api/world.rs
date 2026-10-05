@@ -23,7 +23,7 @@ impl World {
 }
 
 impl World {
-    pub fn spawn_bundle<B: Bundle>(&mut self, bundle: B) -> Entity {
+    pub fn spawn<B: Bundle>(&mut self, bundle: B) -> Entity {
         let entity = self.allocator.create();
         bundle.insert(entity, WorldCell::from(self));
         entity

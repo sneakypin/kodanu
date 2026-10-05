@@ -71,15 +71,15 @@ impl Transform {
 
 impl Transform {
     pub fn forward(&self) -> Vec3 {
-        self.rotation * Vec3::NEG_Z
+        self.rotation * Vec3::FORWARD
     }
 
     pub fn right(&self) -> Vec3 {
-        self.rotation * Vec3::X
+        self.rotation * Vec3::RIGHT
     }
 
     pub fn up(&self) -> Vec3 {
-        self.rotation * Vec3::Y
+        self.rotation * Vec3::UP
     }
 }
 

@@ -8,7 +8,7 @@ pub struct CameraSettings {
 
 impl Default for CameraSettings {
     fn default() -> Self {
-        Self::new(2.0, 15.0)
+        Self::new(100.0, 15.0)
     }
 }
 

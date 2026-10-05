@@ -22,8 +22,6 @@ resolver = "3"
 winit = { version = "0.31.0-beta.2" }
 wgpu = { version = "30.0.1" }
 
-glam = { version = "0.33.2", features = ["zerocopy"] }
-
 rapier3d = { version = "0.34.0", features = ["parallel", "simd-stable", "f32"]}
 
 bytemuck = { version = "1.25.2", features = ["derive"] }

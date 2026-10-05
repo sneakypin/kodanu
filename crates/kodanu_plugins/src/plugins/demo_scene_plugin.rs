@@ -15,10 +15,10 @@ impl Plugin for DemoScenePlugin {
 }
 
 fn demo_scene_system(commands: Commands) {
-    commands.spawn_bundle((
+    commands.spawn((
         Transform::new(
             Vec3::new(0.0, -5.0, -15.0),
-            Quat::from_rotation_y(45.0_f32.to_radians()),
+            Quat::from_rotation_y(45.0),
             Vec3::new(10.0, 0.25, 10.0),
         ),
         MeshRenderer::cube(Color::GREEN),
@@ -26,26 +26,26 @@ fn demo_scene_system(commands: Commands) {
         Collider::cube(Vec3::new(10.0, 0.25, 10.0)),
     ));
 
-    commands.spawn_bundle((
+    commands.spawn((
         Transform::from_position(Vec3::new(0.0, 1.0, -15.0)),
         MeshRenderer::cube(Color::BLUE),
         RigidBody::dynamic(),
         Collider::cube(Vec3::new(1.0, 1.0, 1.0)),
     ));
 
-    commands.spawn_bundle((
+    commands.spawn((
         Transform::from_position(Vec3::new(0.75, 3.0, -15.0)),
         MeshRenderer::cube(Color::WHITE),
         RigidBody::dynamic(),
         Collider::cube(Vec3::new(1.0, 1.0, 1.0)),
     ));
 
-    commands.spawn_bundle((
+    commands.spawn((
         Transform::from_position(Vec3::new(-0.75, 2.5, -15.0)),
         MeshRenderer::cube(Color::RED),
         RigidBody::dynamic(),
         Collider::cube(Vec3::new(1.0, 1.0, 1.0)),
     ));
 
-    commands.spawn_bundle((Transform::default(), DirectLight::default()));
+    commands.spawn((Transform::default(), DirectLight::default()));
 }

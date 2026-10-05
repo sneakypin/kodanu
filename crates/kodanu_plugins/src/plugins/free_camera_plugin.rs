@@ -27,7 +27,7 @@ fn free_camera_system(
 ) {
     for transform in query {
         let direction = transform.forward() * input.axis(Axis::MoveY)
-            + -transform.right() * input.axis(Axis::MoveX)
+            + transform.right() * input.axis(Axis::MoveX)
             + transform.up() * input.axis(Axis::MoveZ);
 
         let yaw = input.axis(Axis::LookX) * settings.sens * time.delta();
@@ -35,13 +35,13 @@ fn free_camera_system(
 
         transform.translate(direction * settings.speed * time.delta());
 
-        transform.rotate(Vec3::Y, yaw);
-        transform.rotate_local(Vec3::X, pitch);
+        transform.rotate(Vec3::UP, yaw);
+        transform.rotate_local(Vec3::RIGHT, pitch);
     }
 }
 
 fn free_camera_startup_system(commands: Commands) {
-    commands.spawn_bundle((
+    commands.spawn((
         Transform::default(),
         Camera::default(),
         Collider::sphere(1.0),

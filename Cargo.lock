@@ -492,8 +492,6 @@ checksum = "7f22fb22f065b308be0d8724e3706c7fa3fc2a6c7d6899df4cad7860e7a75436"
 dependencies = [
  "approx",
  "libm",
- "zerocopy",
- "zerocopy-derive",
 ]
 
 [[package]]
@@ -795,7 +793,6 @@ version = "0.1.0"
 name = "kodanu_math"
 version = "0.1.0"
 dependencies = [
- "glam 0.33.2",
  "kodanu_ecs",
 ]
 

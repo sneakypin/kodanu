@@ -12,8 +12,8 @@ impl<'w> Commands<'w> {
 }
 
 impl<'w> Commands<'w> {
-    pub fn spawn_bundle<B: Bundle>(&self, bundle: B) -> Entity {
-        self.world.spawn_bundle(bundle)
+    pub fn spawn<B: Bundle>(&self, bundle: B) -> Entity {
+        self.world.spawn(bundle)
     }
 
     pub fn with_res<R: Resource>(&self, resource: R) {

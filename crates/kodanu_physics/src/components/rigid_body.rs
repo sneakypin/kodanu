@@ -3,6 +3,8 @@ use rapier3d::prelude::{
     RigidBodyType as RapierRigidBodyType,
 };
 
+use rapier3d::math::{AngVector as RapierAngVector, Vector as RapierVector};
+
 use {kodanu_ecs::Component, kodanu_transform::Transform};
 
 #[derive(Component, Debug)]
@@ -45,9 +47,17 @@ impl RigidBody {
     pub(crate) fn builder(&self, transform: &Transform) -> RapierRigidBodyBuilder {
         let (axis, angle) = transform.rotation().to_axis_angle();
 
+        let position = RapierVector::new(
+            transform.position().x,
+            transform.position().y,
+            transform.position().z,
+        );
+
+        let ang = RapierAngVector::new(axis.x * angle, axis.y * angle, axis.z * angle);
+
         RapierRigidBodyBuilder::new(self.body_type)
-            .translation(transform.position())
-            .rotation(axis * angle)
+            .translation(position)
+            .rotation(ang)
     }
 
     pub(crate) fn set_handle(&mut self, handle: Option<RapierRigidBodyHandle>) {
