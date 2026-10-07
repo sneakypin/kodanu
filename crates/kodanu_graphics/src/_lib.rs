@@ -1,14 +1,13 @@
-mod api;
-mod components;
-mod internal;
-mod plugins;
+mod render;
+mod ui;
 
 pub mod prelude {
-    pub use crate::{
-        AssetServer, Backend, Color, Material, Mesh, MeshRenderer, Vertex,
-    };
+    pub use crate::{AssetServer, Backend, Color, Material, Mesh, MeshRenderer, Rect, Vertex};
 }
 
-pub use {api::*, components::*, plugins::*};
+pub use {
+    render::{api::*, components::*, plugins::*},
+    ui::components::*,
+};
 
-pub(crate) use internal::*;
+pub(crate) use render::internal::*;
