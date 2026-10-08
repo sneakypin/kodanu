@@ -51,16 +51,13 @@ impl AssetServer {
                 continue;
             }
 
-            let Some(mesh) = renderer.take_mesh() else {
-                continue;
+            if let Some(mesh) = renderer.take_mesh_pending() {
+                renderer.set_mesh_handle(Some(server.add(mesh)));
             };
 
-            let Some(material) = renderer.take_material() else {
-                continue;
+            if let Some(material) = renderer.take_material_pending() {
+                renderer.set_material_handle(Some(server.add(material)));
             };
-
-            renderer.set_mesh_handle(Some(server.add(mesh)));
-            renderer.set_material_handle(Some(server.add(material)));
         }
     }
 }

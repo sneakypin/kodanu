@@ -4,19 +4,19 @@ use kodanu_ecs::Component;
 
 #[derive(Component, Debug)]
 pub struct MeshRenderer {
-    mesh: Option<Mesh>,
-    mesh_handle: Option<Handle<Mesh>>,
-    material: Option<Material>,
-    material_handle: Option<Handle<Material>>,
+    pending_mesh: Option<Mesh>,
+    pending_material: Option<Material>,
+    mesh: Option<Handle<Mesh>>,
+    material: Option<Handle<Material>>,
 }
 
 impl MeshRenderer {
     pub fn new(mesh: Option<Mesh>, material: Option<Material>) -> Self {
         Self {
-            mesh_handle: None,
-            mesh,
-            material_handle: None,
-            material,
+            mesh: None,
+            pending_mesh: mesh,
+            material: None,
+            pending_material: material,
         }
     }
 }
@@ -29,27 +29,27 @@ impl MeshRenderer {
 
 impl MeshRenderer {
     pub fn mesh_handle(&self) -> Option<Handle<Mesh>> {
-        self.mesh_handle
+        self.mesh
     }
 
-    pub fn take_mesh(&mut self) -> Option<Mesh> {
-        self.mesh.take()
+    pub fn take_mesh_pending(&mut self) -> Option<Mesh> {
+        self.pending_mesh.take()
     }
 
     pub fn material_handle(&self) -> Option<Handle<Material>> {
-        self.material_handle
+        self.material
     }
 
-    pub fn take_material(&mut self) -> Option<Material> {
-        self.material.take()
+    pub fn take_material_pending(&mut self) -> Option<Material> {
+        self.pending_material.take()
     }
 }
 impl MeshRenderer {
     pub(crate) fn set_mesh_handle(&mut self, handle: Option<Handle<Mesh>>) {
-        self.mesh_handle = handle
+        self.mesh = handle
     }
 
     pub(crate) fn set_material_handle(&mut self, handle: Option<Handle<Material>>) {
-        self.material_handle = handle
+        self.material = handle
     }
 }

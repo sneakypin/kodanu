@@ -2,6 +2,7 @@ use crate::Time;
 
 use kodanu_ecs::{Plugin, Registry, Stage};
 
+/// Registers the [`crate::Time`] resource and its update system.
 pub struct TimePlugin;
 
 impl Plugin for TimePlugin {
