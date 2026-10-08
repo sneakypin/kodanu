@@ -19,7 +19,7 @@ Add `kodanu_camera` to your dependencies:
 
 ```toml
 [dependencies]
-kodanu_camera = "0.1"
+kodanu_camera = "1.0.0"
 ```
 
 Import the commonly used camera types through the prelude:
@@ -38,7 +38,7 @@ Or create one with a custom projection:
 
 ```rust
 let projection = PerspectiveProjection::new(
-    90.0_f32.to_radians(),
+    90.0,
     16.0 / 9.0,
     0.03,
     1000.0,
