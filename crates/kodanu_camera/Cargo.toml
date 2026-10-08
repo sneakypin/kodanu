@@ -1,10 +1,22 @@
 [package]
 name = "kodanu_camera"
 version = "0.1.0"
-edition = "2024"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+
+description = "Camera and projection components for the Kodanu game engine."
+keywords = ["game-engine", "gamedev", "camera"]
+categories = ["game-development"]
 
 [lib]
 path = "src/_lib.rs"
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--document-private-items"]
 
 [dependencies]
 kodanu_math = { workspace = true }

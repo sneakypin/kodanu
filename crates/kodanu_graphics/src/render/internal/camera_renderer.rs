@@ -65,10 +65,10 @@ impl CameraRenderer {
     ) {
         for (transform, camera, _) in query {
             for event in event.iter() {
-                camera.set_viewport(*event);
+                camera.set_aspect_from_surface(*event);
             }
 
-            render.update(instance.queue(), camera.view_proj(transform.inverse_matrix()));
+            render.update(instance.queue(), camera.view_projection_matrix(transform.inverse_matrix()));
         }
     }
 }
