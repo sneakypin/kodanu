@@ -68,7 +68,7 @@ impl CameraRenderer {
                 camera.set_viewport(*event);
             }
 
-            render.update(instance.queue(), camera.view_proj(transform.view_matrix()));
+            render.update(instance.queue(), camera.view_proj(transform.inverse_matrix()));
         }
     }
 }
