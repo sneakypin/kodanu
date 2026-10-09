@@ -55,10 +55,12 @@ impl WindowApplication for App {
             WindowEvent::RedrawRequested => {
                 cell.expect_mut_event::<Redrawing>().send(Redrawing);
 
+                cell.update();
+
                 self.schduler
                     .run_full(cell, cell.expect_res::<Time>().delta());
 
-                cell.update();
+                cell.advance_change_tick();
             }
             WindowEvent::SurfaceResized(size) => {
                 cell.expect_mut_event::<SurfaceSize>().send(size);

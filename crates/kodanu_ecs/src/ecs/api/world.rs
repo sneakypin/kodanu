@@ -9,6 +9,7 @@ pub struct World {
     storages: ComponentRegistry,
     resources: ResourceRegistry,
     events: EventRegistry,
+    tick: u64,
 }
 
 impl World {
@@ -18,6 +19,7 @@ impl World {
             storages: ComponentRegistry::with_capacity(capacity),
             resources: ResourceRegistry::with_capacity(capacity),
             events: EventRegistry::with_capacity(capacity),
+            tick: 0,
         }
     }
 }
@@ -44,9 +46,8 @@ impl World {
             return;
         }
 
-        self.storages.push(entity.index(), component);
+        self.storages.push(entity.index(), component, self.tick);
     }
-
     pub fn remove_component<C: Component>(&mut self, entity: Entity) -> Option<C> {
         if !self.allocator.is_alive(entity) {
             return None;
@@ -68,7 +69,22 @@ impl World {
             return None;
         }
 
-        self.storages.get_mut(entity.index())
+        let tick = self.tick;
+        let storage = self.storages.get_storage_mut::<C>()?;
+
+        storage.mark_changed(entity.index(), tick);
+        storage.get_mut(entity.index())
+    }
+
+    pub fn change_tick(&self) -> u64 {
+        self.tick
+    }
+
+    pub fn advance_change_tick(&mut self) {
+        self.tick = self
+            .tick
+            .checked_add(1)
+            .expect("world change tick overflow");
     }
 
     pub(crate) fn storage<C: Component>(&self) -> Option<&SparseSet<C>> {

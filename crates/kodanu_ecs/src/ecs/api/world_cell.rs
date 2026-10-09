@@ -37,6 +37,16 @@ impl<'w> WorldCell<'w> {
         unsafe { (*self.world.as_ptr()).component_mut::<C>(entity) }
     }
 
+    pub fn change_tick(self) -> u64 {
+        unsafe { self.world.as_ref().change_tick() }
+    }
+
+    pub fn advance_change_tick(&self) {
+        unsafe {
+            (*self.world.as_ptr()).advance_change_tick();
+        }
+    }
+
     pub(crate) fn storage<C: Component>(self) -> Option<&'w SparseSet<C>> {
         unsafe { (*self.world.as_ptr()).storage::<C>() }
     }

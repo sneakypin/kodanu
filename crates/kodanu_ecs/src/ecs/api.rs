@@ -1,9 +1,11 @@
+mod added;
 mod bundle;
+mod changed;
 mod commands;
 mod component;
 mod entity;
 mod event;
-mod event_queue;
+mod event_buffer;
 mod event_reader;
 mod event_writer;
 mod query;
@@ -19,8 +21,9 @@ mod world_cell;
 mod write;
 
 pub use {
-    bundle::Bundle, commands::Commands, component::Component, entity::Entity, event::Event,
-    event_queue::EventBuffer, event_reader::EventReader, event_writer::EventWriter, query::Query,
-    query_filter::QueryFilter, read::Read, res::Res, res_mut::ResMut, resource::Resource,
-    with::With, without::Without, world::World, world_cell::WorldCell, write::Write,
+    added::Added, bundle::Bundle, changed::Changed, commands::Commands, component::Component,
+    entity::Entity, event::Event, event_buffer::EventBuffer, event_reader::EventReader,
+    event_writer::EventWriter, query::Query, query_filter::QueryFilter, read::Read, res::Res,
+    res_mut::ResMut, resource::Resource, with::With, without::Without, world::World,
+    world_cell::WorldCell, write::Write,
 };

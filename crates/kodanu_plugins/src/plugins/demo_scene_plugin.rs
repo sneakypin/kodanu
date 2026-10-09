@@ -47,5 +47,8 @@ fn demo_scene_system(commands: Commands) {
         Collider::cube(Vec3::new(1.0, 1.0, 1.0)),
     ));
 
-    commands.spawn((Transform::default(), DirectLight::default()));
+    commands.spawn((
+        Transform::default(),
+        DirectLight::new(-Vec3::new(0.25, 1.0, 0.0), Color::WHITE, 1.0),
+    ));
 }

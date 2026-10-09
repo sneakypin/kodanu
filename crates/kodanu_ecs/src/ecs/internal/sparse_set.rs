@@ -6,6 +6,8 @@ pub struct SparseSet<C> {
     sparse: Vec<u32>,
     indices: Vec<u32>,
     dense: Vec<C>,
+    added: Vec<u64>,
+    changed: Vec<u64>,
 }
 
 impl<C> SparseSet<C> {
@@ -18,6 +20,8 @@ impl<C> Default for SparseSet<C> {
             sparse: Vec::new(),
             indices: Vec::new(),
             dense: Vec::new(),
+            added: Vec::new(),
+            changed: Vec::new(),
         }
     }
 }
@@ -28,6 +32,8 @@ impl<C> SparseSet<C> {
             sparse: Vec::with_capacity(capacity),
             indices: Vec::with_capacity(capacity),
             dense: Vec::with_capacity(capacity),
+            added: Vec::with_capacity(capacity),
+            changed: Vec::with_capacity(capacity),
         }
     }
 }
@@ -60,29 +66,40 @@ impl<C> SparseSet<C> {
     }
 
     pub fn insert(&mut self, entity: u32, component: C) -> Option<C> {
+        self.insert_at(entity, component, 0)
+    }
+
+    pub fn insert_at(&mut self, entity: u32, component: C, tick: u64) -> Option<C> {
         self.ensure_capacity(entity);
 
         if let Some(dense) = self.dense_index(entity) {
+            self.changed[dense] = tick;
             return Some(replace(&mut self.dense[dense], component));
         }
 
-        let dense = u32::try_from(self.dense().len())
+        let dense = u32::try_from(self.dense.len())
             .unwrap_or_else(|_| panic!("{}", EntityError::GenerationOverflow));
 
         self.sparse[entity as usize] = dense;
 
         self.indices.push(entity);
         self.dense.push(component);
+        self.added.push(tick);
+        self.changed.push(tick);
 
         None
     }
 
     pub fn remove(&mut self, entity: u32) -> Option<C> {
         let dense = self.dense_index(entity)?;
+
         self.sparse[entity as usize] = Self::INVALID_DENSE_INDEX;
 
         let component = self.dense.swap_remove(dense);
+
         self.indices.swap_remove(dense);
+        self.added.swap_remove(dense);
+        self.changed.swap_remove(dense);
 
         if dense < self.indices.len() {
             let moved = self.indices[dense];
@@ -110,6 +127,33 @@ impl<C> SparseSet<C> {
         if self.sparse.len() < requied {
             self.sparse.resize(requied, Self::INVALID_DENSE_INDEX);
         }
+    }
+}
+
+impl<C> SparseSet<C> {
+    pub fn mark_changed_dense(&mut self, dense: usize, tick: u64) {
+        if let Some(changed_tick) = self.changed.get_mut(dense) {
+            *changed_tick = tick;
+        }
+    }
+
+    pub fn added_tick(&self, entity: u32) -> Option<u64> {
+        let dense = self.dense_index(entity)?;
+        self.added.get(dense).copied()
+    }
+
+    pub fn changed_tick(&self, entity: u32) -> Option<u64> {
+        let dense = self.dense_index(entity)?;
+        self.changed.get(dense).copied()
+    }
+
+    pub fn mark_changed(&mut self, entity: u32, tick: u64) -> bool {
+        let Some(dense) = self.dense_index(entity) else {
+            return false;
+        };
+
+        self.changed[dense] = tick;
+        true
     }
 }
 

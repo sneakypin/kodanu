@@ -26,6 +26,6 @@ pub(crate) use {
     function_system::FunctionSystem, into_system::IntoSystem, query_access::QueryAccess,
     query_error::QueryError, query_iter::QueryIter, query_storage::QueryStorage,
     read_storage::ReadStorage, resource_registry::ResourceRegistry, sparse_set::SparseSet,
-    system_param::SystemParam, system_param_function::SystemParamFunction, world_error::WorldError,
-    write_storage::WriteStorage,
+    system_param::SystemParam, system_param_function::SystemParamFunction,
+    world_error::WorldError, write_storage::WriteStorage,
 };

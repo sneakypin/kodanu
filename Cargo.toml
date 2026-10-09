@@ -32,7 +32,7 @@ wgpu = { version = "30.0.1" }
 
 rapier3d = { version = "0.34.0", features = ["parallel", "simd-stable", "f32"]}
 
-serde = { version = "1.0", features = ["derive"] }
+serde = { version = "1.0.228", features = ["derive"] }
 ron = "0.12.2"
 toml = "1.1.8"
 
