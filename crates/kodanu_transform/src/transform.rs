@@ -16,8 +16,7 @@ use {
 /// # Examples
 ///
 /// ```
-/// use kodanu_math::{Quat, Vec3};
-/// use kodanu_transform::Transform;
+/// use {kodanu_math::{Quat, Vec3}, kodanu_transform::Transform};
 ///
 /// let transform = Transform::new(
 ///     Vec3::new(10.0, 0.0, 5.0),

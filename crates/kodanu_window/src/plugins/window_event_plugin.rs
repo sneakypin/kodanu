@@ -1,8 +1,8 @@
 use crate::{Closing, KeyboardEvent, MouseEvent, MouseWheelEvent, Redrawing};
 
 pub use {
-    kodanu_ecs::{EventQueue, Plugin, Registry},
-    kodanu_math::{MousePosition, SurfaceSize},
+    kodanu_ecs::{EventBuffer, Plugin, Registry},
+    kodanu_math::{MousePos, SurfaceSize},
 };
 
 pub struct WindowEventPlugin;
@@ -10,14 +10,14 @@ pub struct WindowEventPlugin;
 impl Plugin for WindowEventPlugin {
     fn build(&self, registry: &mut impl Registry) {
         registry
-            .with_event(EventQueue::<Closing>::default())
-            .with_event(EventQueue::<Redrawing>::default())
-            .with_event(EventQueue::<SurfaceSize>::default());
+            .with_event(EventBuffer::<Closing>::default())
+            .with_event(EventBuffer::<Redrawing>::default())
+            .with_event(EventBuffer::<SurfaceSize>::default());
 
         registry
-            .with_event(EventQueue::<KeyboardEvent>::default())
-            .with_event(EventQueue::<MouseEvent>::default())
-            .with_event(EventQueue::<MousePosition>::default())
-            .with_event(EventQueue::<MouseWheelEvent>::default());
+            .with_event(EventBuffer::<KeyboardEvent>::default())
+            .with_event(EventBuffer::<MouseEvent>::default())
+            .with_event(EventBuffer::<MousePos>::default())
+            .with_event(EventBuffer::<MouseWheelEvent>::default());
     }
 }

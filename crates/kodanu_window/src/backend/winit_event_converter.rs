@@ -9,7 +9,7 @@ use winit::event::{
 
 use winit::keyboard::{KeyCode as WinitKeyCode, PhysicalKey as WinitPhysicalKey};
 
-use kodanu_math::{MousePosition, MouseScroll, MouseScrollDelta, SurfaceSize};
+use kodanu_math::{MousePos, MouseScroll, MouseScrollDelta, SurfaceSize};
 
 pub struct WinitEventConverter;
 
@@ -25,7 +25,7 @@ impl WinitEventConverter {
                 KeyboardEvent::new(Self::key(event.physical_key)?, Self::key_state(event.state)),
             )),
             WinitWindowEvent::PointerMoved { position, .. } => Some(WindowEvent::PointerMoved(
-                MousePosition::new(position.x as f32, position.y as f32),
+                MousePos::new(position.x as f32, position.y as f32),
             )),
             WinitWindowEvent::PointerButton { button, state, .. } => {
                 Some(WindowEvent::MouseInput(MouseEvent::new(

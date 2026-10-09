@@ -1,6 +1,6 @@
 //! Spatial transformations for entities in the Kodanu engine.
 //!
-//! This module provides [`Transform`], a component that describes an entity's
+//! This module provides [`crate::Transform`], a component that describes an entity's
 //! position, rotation, and scale in 3D space.
 
 #![warn(missing_docs)]
@@ -11,7 +11,7 @@ mod transform;
 /// Commonly used types from `kodanu_transform`.
 ///
 /// ```
-/// use kodanu_transform::prelude::*;
+/// use kodanu_transform::prelude::*; or kodanu_transform::Transform
 /// ```
 pub mod prelude {
     pub use crate::Transform;

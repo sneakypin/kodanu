@@ -1,5 +1,5 @@
 use crate::{
-    Event, EventQueue, IntoSystem, Plugin, Registry, Resource, Scheduler, Stage, WorldCell,
+    Event, EventBuffer, IntoSystem, Plugin, Registry, Resource, Scheduler, Stage, WorldCell,
 };
 
 use std::any::TypeId;
@@ -38,7 +38,7 @@ impl Registry for PluginRegistry {
         self
     }
 
-    fn with_event<E: Event>(&mut self, event: EventQueue<E>) -> &mut Self {
+    fn with_event<E: Event>(&mut self, event: EventBuffer<E>) -> &mut Self {
         self.events.push(Box::new(move |cell| {
             cell.with_event(event);
         }));

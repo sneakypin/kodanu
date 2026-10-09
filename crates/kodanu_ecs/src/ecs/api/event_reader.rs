@@ -1,11 +1,11 @@
-use crate::{Event, EventQueue, SystemParam, WorldCell};
+use crate::{Event, EventBuffer, SystemParam, WorldCell};
 
 pub struct EventReader<'w, E: Event> {
-    value: &'w EventQueue<E>,
+    value: &'w EventBuffer<E>,
 }
 
 impl<'w, E: Event> EventReader<'w, E> {
-    pub fn new(value: &'w EventQueue<E>) -> Self {
+    pub fn new(value: &'w EventBuffer<E>) -> Self {
         Self { value }
     }
 }
@@ -15,7 +15,7 @@ impl<'w, E: Event> EventReader<'w, E> {
         self.value.iter()
     }
 
-    pub fn get(&self) -> &EventQueue<E> {
+    pub fn get(&self) -> &EventBuffer<E> {
         self.value
     }
 }

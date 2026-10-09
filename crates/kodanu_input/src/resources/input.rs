@@ -2,7 +2,7 @@ use crate::{ActionMap, Axis, DeviceState};
 
 use {
     kodanu_ecs::{EventReader, ResMut, Resource},
-    kodanu_math::{MouseDelta, MousePosition, MouseScroll, MouseScrollDelta},
+    kodanu_math::{MouseDelta, MousePos, MouseScroll, MouseScrollDelta},
 };
 
 pub use kodanu_window::{
@@ -16,7 +16,7 @@ pub struct Input {
     mouse: DeviceState<Button>,
     mouse_delta: MouseDelta,
     mouse_wheel_delta: MouseScrollDelta,
-    mouse_position: Option<MousePosition>,
+    mouse_position: Option<MousePos>,
 }
 
 impl Input {
@@ -37,7 +37,7 @@ impl Input {
         mut input: ResMut<Input>,
         keyboard: EventReader<KeyboardEvent>,
         mouse: EventReader<MouseEvent>,
-        position: EventReader<MousePosition>,
+        position: EventReader<MousePos>,
         wheel: EventReader<MouseWheelEvent>,
     ) {
         for event in keyboard.iter() {
@@ -129,7 +129,7 @@ impl Input {
 }
 
 impl Input {
-    pub fn mouse_position(&self) -> Option<MousePosition> {
+    pub fn mouse_position(&self) -> Option<MousePos> {
         self.mouse_position
     }
 

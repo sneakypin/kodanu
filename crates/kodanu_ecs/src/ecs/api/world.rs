@@ -1,5 +1,5 @@
 use crate::{
-    Bundle, Component, ComponentRegistry, Entity, EntityAllocator, Event, EventQueue,
+    Bundle, Component, ComponentRegistry, Entity, EntityAllocator, Event, EventBuffer,
     EventRegistry, Resource, ResourceRegistry, SparseSet, WorldCell, WorldError,
 };
 
@@ -117,27 +117,27 @@ impl World {
 }
 
 impl World {
-    pub fn with_event<E: Event>(&mut self, event: EventQueue<E>) -> &mut Self {
+    pub fn with_event<E: Event>(&mut self, event: EventBuffer<E>) -> &mut Self {
         self.events.push(event);
 
         self
     }
 
-    pub fn get_event<E: Event>(&self) -> Option<&EventQueue<E>> {
+    pub fn get_event<E: Event>(&self) -> Option<&EventBuffer<E>> {
         self.events.get::<E>()
     }
 
-    pub fn get_mut_event<E: Event>(&mut self) -> Option<&mut EventQueue<E>> {
+    pub fn get_mut_event<E: Event>(&mut self) -> Option<&mut EventBuffer<E>> {
         self.events.get_mut::<E>()
     }
 
-    pub fn expect_event<E: Event>(&self) -> &EventQueue<E> {
+    pub fn expect_event<E: Event>(&self) -> &EventBuffer<E> {
         self.events
             .get::<E>()
             .unwrap_or_else(|| panic!("{}", WorldError::EventNotRegistered))
     }
 
-    pub fn expect_mut_event<E: Event>(&mut self) -> &mut EventQueue<E> {
+    pub fn expect_mut_event<E: Event>(&mut self) -> &mut EventBuffer<E> {
         self.events
             .get_mut::<E>()
             .unwrap_or_else(|| panic!("{}", WorldError::EventNotRegistered))

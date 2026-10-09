@@ -1,16 +1,45 @@
-use std::ops::{Index, IndexMut, Mul, MulAssign};
-
 use crate::{Quat, Vec3, Vec4};
 
+use std::ops::{Mul, MulAssign};
+
+/// A 4×4 matrix with `f32` components.
+///
+/// The matrix is stored as four column vectors: [`Self::x_axis`],
+/// [`Self::y_axis`], [`Self::z_axis`], and [`Self::w_axis`].
+///
+/// Matrix-vector multiplication uses column vectors. Translation is stored
+/// in the XYZ components of `w_axis`.
+///
+/// The matrix supports common 3D transformations, including translation,
+/// scaling, rotation, perspective projection, and point or vector
+/// transformation.
+///
+/// # Examples
+///
+/// ```
+/// use kodanu_math::{Mat4, Vec3};
+///
+/// let translation = Mat4::from_translation(Vec3::new(2.0, 3.0, 4.0));
+/// let point = translation.transform_point3(Vec3::ZERO);
+///
+/// assert_eq!(point, Vec3::new(2.0, 3.0, 4.0));
+/// ```
 #[derive(Default, Debug, Clone, Copy, PartialEq)]
 pub struct Mat4 {
+    /// The first column of the matrix.
     pub x_axis: Vec4,
+    /// The second column of the matrix.
     pub y_axis: Vec4,
+    /// The third column of the matrix.
     pub z_axis: Vec4,
+    /// The fourth column of the matrix.
+    ///
+    /// For affine transformation matrices, its XYZ components store translation.
     pub w_axis: Vec4,
 }
 
 impl Mat4 {
+    /// The 4×4 identity matrix.
     pub const IDENTITY: Self = Self::new(
         Vec4::new(1.0, 0.0, 0.0, 0.0),
         Vec4::new(0.0, 1.0, 0.0, 0.0),
@@ -20,6 +49,8 @@ impl Mat4 {
 }
 
 impl Mat4 {
+    /// Creates a matrix from its four column vectors.
+    #[must_use]
     pub const fn new(x_axis: Vec4, y_axis: Vec4, z_axis: Vec4, w_axis: Vec4) -> Self {
         Self {
             x_axis,
@@ -31,11 +62,20 @@ impl Mat4 {
 }
 
 impl Mat4 {
-    pub fn from_cols(x_axis: Vec4, y_axis: Vec4, z_axis: Vec4, w_axis: Vec4) -> Self {
+    /// Creates a matrix from four column vectors.
+    ///
+    /// This is equivalent to [`Self::new`].
+    #[must_use]
+    pub const fn from_cols(x_axis: Vec4, y_axis: Vec4, z_axis: Vec4, w_axis: Vec4) -> Self {
         Self::new(x_axis, y_axis, z_axis, w_axis)
     }
 
-    pub fn from_array(array: [f32; 16]) -> Self {
+    /// Creates a matrix from 16 values in column-major order.
+    ///
+    /// The first four values form the first column, the next four form
+    /// the second column, and so on.
+    #[must_use]
+    pub const fn from_array(array: [f32; 16]) -> Self {
         Self::new(
             Vec4::new(array[0], array[1], array[2], array[3]),
             Vec4::new(array[4], array[5], array[6], array[7]),
@@ -44,28 +84,9 @@ impl Mat4 {
         )
     }
 
-    pub fn to_array(&self) -> [f32; 16] {
-        [
-            self.x_axis.x,
-            self.x_axis.y,
-            self.x_axis.z,
-            self.x_axis.w,
-            self.y_axis.x,
-            self.y_axis.y,
-            self.y_axis.z,
-            self.y_axis.w,
-            self.z_axis.x,
-            self.z_axis.y,
-            self.z_axis.z,
-            self.z_axis.w,
-            self.w_axis.x,
-            self.w_axis.y,
-            self.w_axis.z,
-            self.w_axis.w,
-        ]
-    }
-
-    pub fn from_translation(translation: Vec3) -> Self {
+    /// Creates a translation matrix.
+    #[must_use]
+    pub const fn from_translation(translation: Vec3) -> Self {
         Self::new(
             Vec4::new(1.0, 0.0, 0.0, 0.0),
             Vec4::new(0.0, 1.0, 0.0, 0.0),
@@ -74,7 +95,11 @@ impl Mat4 {
         )
     }
 
-    pub fn from_scale(scale: Vec3) -> Self {
+    /// Creates a scale matrix.
+    ///
+    /// The scale factors are applied independently along the X, Y, and Z axes.
+    #[must_use]
+    pub const fn from_scale(scale: Vec3) -> Self {
         Self::new(
             Vec4::new(scale.x, 0.0, 0.0, 0.0),
             Vec4::new(0.0, scale.y, 0.0, 0.0),
@@ -83,6 +108,10 @@ impl Mat4 {
         )
     }
 
+    /// Creates a rotation matrix from a quaternion.
+    ///
+    /// The quaternion is normalized before conversion.
+    #[must_use]
     pub fn from_quat(rotation: Quat) -> Self {
         let q = rotation.normalize();
 
@@ -110,6 +139,12 @@ impl Mat4 {
         )
     }
 
+    /// Creates a transformation matrix from scale, rotation, and translation.
+    ///
+    /// The resulting matrix applies scale and rotation to points before
+    /// applying translation, using the matrix convention implemented by
+    /// this type.
+    #[must_use]
     pub fn from_scale_rotation_translation(scale: Vec3, rotation: Quat, translation: Vec3) -> Self {
         let rotation = Self::from_quat(rotation);
 
@@ -121,6 +156,48 @@ impl Mat4 {
         )
     }
 
+    /// Converts the matrix to 16 values in column-major order.
+    #[must_use]
+    pub const fn to_array(&self) -> [f32; 16] {
+        [
+            self.x_axis.x,
+            self.x_axis.y,
+            self.x_axis.z,
+            self.x_axis.w,
+            self.y_axis.x,
+            self.y_axis.y,
+            self.y_axis.z,
+            self.y_axis.w,
+            self.z_axis.x,
+            self.z_axis.y,
+            self.z_axis.z,
+            self.z_axis.w,
+            self.w_axis.x,
+            self.w_axis.y,
+            self.w_axis.z,
+            self.w_axis.w,
+        ]
+    }
+
+    /// Converts the matrix to four columns, each represented as an array.
+    ///
+    /// The returned layout is `[[x_axis], [y_axis], [z_axis], [w_axis]]`.
+    #[must_use]
+    pub const fn to_cols_array_2d(self) -> [[f32; 4]; 4] {
+        [
+            [self.x_axis.x, self.x_axis.y, self.x_axis.z, self.x_axis.w],
+            [self.y_axis.x, self.y_axis.y, self.y_axis.z, self.y_axis.w],
+            [self.z_axis.x, self.z_axis.y, self.z_axis.z, self.z_axis.w],
+            [self.w_axis.x, self.w_axis.y, self.w_axis.z, self.w_axis.w],
+        ]
+    }
+
+    /// Transforms a point using this matrix.
+    ///
+    /// The point is treated as a homogeneous vector with `w = 1`.
+    /// If the resulting `w` component is non-zero, the XYZ components
+    /// are divided by `w`.
+    #[must_use]
     pub fn transform_point3(self, point: Vec3) -> Vec3 {
         let result = self * Vec4::new(point.x, point.y, point.z, 1.0);
 
@@ -135,13 +212,22 @@ impl Mat4 {
         }
     }
 
+    /// Transforms a direction vector using this matrix.
+    ///
+    /// The vector is treated as a homogeneous vector with `w = 0`,
+    /// so translation does not affect the result.
+    #[must_use]
     pub fn transform_vector3(self, vector: Vec3) -> Vec3 {
         let result = self * Vec4::new(vector.x, vector.y, vector.z, 0.0);
 
         Vec3::new(result.x, result.y, result.z)
     }
 
-    pub fn transpose(self) -> Self {
+    /// Returns the transpose of this matrix.
+    ///
+    /// Rows and columns are exchanged.
+    #[must_use]
+    pub const fn transpose(self) -> Self {
         Self::new(
             Vec4::new(self.x_axis.x, self.y_axis.x, self.z_axis.x, self.w_axis.x),
             Vec4::new(self.x_axis.y, self.y_axis.y, self.z_axis.y, self.w_axis.y),
@@ -150,6 +236,8 @@ impl Mat4 {
         )
     }
 
+    /// Returns the determinant of the matrix.
+    #[must_use]
     pub fn determinant(self) -> f32 {
         let m = self.to_array();
 
@@ -170,6 +258,15 @@ impl Mat4 {
         a0 * b5 - a1 * b4 + a2 * b3 + a3 * b2 - a4 * b1 + a5 * b0
     }
 
+    /// Returns the inverse of this matrix.
+    ///
+    /// If the determinant's absolute value is less than or equal to
+    /// `f32::EPSILON`, this method returns [`Self::IDENTITY`] instead.
+    ///
+    /// This fallback does not indicate that the matrix was inverted
+    /// successfully. Check [`Self::determinant`] if singular matrices
+    /// are possible.
+    #[must_use]
     pub fn inverse(self) -> Self {
         let m = self.to_array();
 
@@ -223,15 +320,16 @@ impl Mat4 {
         )
     }
 
-    pub fn to_cols_array_2d(self) -> [[f32; 4]; 4] {
-        [
-            [self.x_axis.x, self.x_axis.y, self.x_axis.z, self.x_axis.w],
-            [self.y_axis.x, self.y_axis.y, self.y_axis.z, self.y_axis.w],
-            [self.z_axis.x, self.z_axis.y, self.z_axis.z, self.z_axis.w],
-            [self.w_axis.x, self.w_axis.y, self.w_axis.z, self.w_axis.w],
-        ]
-    }
-
+    /// Creates a right-handed perspective projection matrix.
+    ///
+    /// `fov_y_degrees` is the vertical field of view in degrees.
+    /// `aspect_ratio` is the viewport width divided by its height.
+    /// `near` and `far` specify the near and far clipping-plane distances.
+    ///
+    /// The method does not validate its arguments. The field of view,
+    /// aspect ratio, and clipping-plane distances must form a valid
+    /// perspective projection.
+    #[must_use]
     pub fn perspective_rh(fov_y_degrees: f32, aspect_ratio: f32, near: f32, far: f32) -> Self {
         let f = 1.0 / (fov_y_degrees.to_radians() * 0.5).tan();
 
@@ -247,7 +345,6 @@ impl Mat4 {
 impl Mul for Mat4 {
     type Output = Self;
 
-    #[inline]
     fn mul(self, rhs: Self) -> Self::Output {
         Self::new(
             self * rhs.x_axis,
@@ -261,7 +358,6 @@ impl Mul for Mat4 {
 impl Mul<Vec4> for Mat4 {
     type Output = Vec4;
 
-    #[inline]
     fn mul(self, rhs: Vec4) -> Self::Output {
         Vec4::new(
             self.x_axis.x * rhs.x
@@ -285,36 +381,7 @@ impl Mul<Vec4> for Mat4 {
 }
 
 impl MulAssign for Mat4 {
-    #[inline]
     fn mul_assign(&mut self, rhs: Self) {
         *self = *self * rhs;
-    }
-}
-
-impl Index<usize> for Mat4 {
-    type Output = Vec4;
-
-    #[inline]
-    fn index(&self, index: usize) -> &Self::Output {
-        match index {
-            0 => &self.x_axis,
-            1 => &self.y_axis,
-            2 => &self.z_axis,
-            3 => &self.w_axis,
-            _ => panic!("Mat4 index out of bounds: {index}"),
-        }
-    }
-}
-
-impl IndexMut<usize> for Mat4 {
-    #[inline]
-    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        match index {
-            0 => &mut self.x_axis,
-            1 => &mut self.y_axis,
-            2 => &mut self.z_axis,
-            3 => &mut self.w_axis,
-            _ => panic!("Mat4 index out of bounds: {index}"),
-        }
     }
 }

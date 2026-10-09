@@ -24,20 +24,17 @@ impl Camera {
         self.projection.projection_matrix() * view_matrix
     }
 
-    /// Sets the camera's viewport aspect ratio.
-    pub fn set_aspect(&mut self, aspect: f32) {
-        match &mut self.projection {
-            Projection::Perspective(projection) => projection.set_aspect_ratio(aspect),
-        }
-    }
-
     /// Updates the camera aspect ratio from a rendering surface size.
     ///
     /// The aspect ratio is calculated as `width / height`.
     ///
     /// Does nothing when the surface height is zero.
     pub fn set_aspect_from_surface(&mut self, size: SurfaceSize) {
-        self.set_aspect(size.width() as f32 / size.height() as f32);
+        let aspect = size.aspect_ratio();
+
+        match &mut self.projection {
+            Projection::Perspective(projection) => projection.set_aspect_ratio(aspect),
+        }
     }
 
     /// Builds the camera's projection matrix.

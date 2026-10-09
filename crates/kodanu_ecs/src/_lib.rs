@@ -4,7 +4,7 @@ mod scheduler;
 
 pub mod prelude {
     pub use crate::{
-        Bundle, Component, Entity, Event, EventQueue, Plugin, Registry, Resource, Stage, World,
+        Bundle, Component, Entity, Event, EventBuffer, Plugin, Registry, Resource, Stage, World,
     };
 }
 

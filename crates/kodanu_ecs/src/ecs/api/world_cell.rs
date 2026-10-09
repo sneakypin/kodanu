@@ -1,4 +1,4 @@
-use crate::{Bundle, Component, Entity, Event, EventQueue, Resource, SparseSet, World};
+use crate::{Bundle, Component, Entity, Event, EventBuffer, Resource, SparseSet, World};
 
 use std::{marker::PhantomData, ptr::NonNull};
 
@@ -77,23 +77,23 @@ impl<'w> WorldCell<'w> {
 }
 
 impl<'w> WorldCell<'w> {
-    pub fn with_event<E: Event>(&self, event: EventQueue<E>) -> Self {
+    pub fn with_event<E: Event>(&self, event: EventBuffer<E>) -> Self {
         unsafe { (*self.world.as_ptr()).with_event(event).into() }
     }
 
-    pub fn get_event<E: Event>(&self) -> Option<&'w EventQueue<E>> {
+    pub fn get_event<E: Event>(&self) -> Option<&'w EventBuffer<E>> {
         unsafe { (*self.world.as_ptr()).get_event::<E>() }
     }
 
-    pub fn get_mut_event<E: Event>(&self) -> Option<&'w mut EventQueue<E>> {
+    pub fn get_mut_event<E: Event>(&self) -> Option<&'w mut EventBuffer<E>> {
         unsafe { (*self.world.as_ptr()).get_mut_event::<E>() }
     }
 
-    pub fn expect_event<E: Event>(&self) -> &'w EventQueue<E> {
+    pub fn expect_event<E: Event>(&self) -> &'w EventBuffer<E> {
         unsafe { (*self.world.as_ptr()).expect_event::<E>() }
     }
 
-    pub fn expect_mut_event<E: Event>(&self) -> &'w mut EventQueue<E> {
+    pub fn expect_mut_event<E: Event>(&self) -> &'w mut EventBuffer<E> {
         unsafe { (*self.world.as_ptr()).expect_mut_event::<E>() }
     }
 

@@ -1,11 +1,11 @@
-use crate::{Event, EventQueue, SystemParam, WorldCell};
+use crate::{Event, EventBuffer, SystemParam, WorldCell};
 
 pub struct EventWriter<'w, E: Event> {
-    value: &'w mut EventQueue<E>,
+    value: &'w mut EventBuffer<E>,
 }
 
 impl<'w, E: Event> EventWriter<'w, E> {
-    pub fn new(value: &'w mut EventQueue<E>) -> Self {
+    pub fn new(value: &'w mut EventBuffer<E>) -> Self {
         Self { value }
     }
 }
@@ -15,7 +15,7 @@ impl<'w, E: Event> EventWriter<'w, E> {
         self.value.send(event);
     }
 
-    pub fn get(&mut self) -> &mut EventQueue<E> {
+    pub fn get(&mut self) -> &mut EventBuffer<E> {
         self.value
     }
 }

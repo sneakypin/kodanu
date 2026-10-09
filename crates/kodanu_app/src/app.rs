@@ -6,7 +6,7 @@ use kodanu_window::{
 use {
     kodanu_ecs::{Plugin, PluginRegistry, Registry, Scheduler, World, WorldCell},
     kodanu_graphics::{Backend, Instance, InstanceDescriptor},
-    kodanu_math::{MousePosition, SurfaceSize},
+    kodanu_math::{MousePos, SurfaceSize},
     kodanu_time::Time,
 };
 
@@ -70,7 +70,7 @@ impl WindowApplication for App {
                 cell.expect_mut_event::<MouseEvent>().send(event);
             }
             WindowEvent::PointerMoved(position) => {
-                cell.expect_mut_event::<MousePosition>().send(position);
+                cell.expect_mut_event::<MousePos>().send(position);
             }
             WindowEvent::MouseWheel(delta) => {
                 cell.expect_mut_event::<MouseWheelEvent>().send(delta);

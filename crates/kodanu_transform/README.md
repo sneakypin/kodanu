@@ -17,13 +17,6 @@ Transform components for the [Kodanu](https://github.com/yourname/kodanu) game e
 
 ## Usage
 
-Add `kodanu_transform` to your project:
-
-```toml
-[dependencies]
-kodanu_transform = "1.0.0"
-```
-
 Create a transform:
 
 ```rust

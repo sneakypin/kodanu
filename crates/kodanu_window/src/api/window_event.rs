@@ -1,6 +1,6 @@
 use crate::{KeyboardEvent, MouseEvent, MouseWheelEvent};
 
-use kodanu_math::{MousePosition, SurfaceSize};
+use kodanu_math::{MousePos, SurfaceSize};
 
 #[derive(Debug, Clone, Copy)]
 pub enum WindowEvent {
@@ -9,7 +9,7 @@ pub enum WindowEvent {
     SurfaceResized(SurfaceSize),
     KeyboardInput(KeyboardEvent),
     MouseInput(MouseEvent),
-    PointerMoved(MousePosition),
+    PointerMoved(MousePos),
     MouseWheel(MouseWheelEvent),
     Unknown,
 }

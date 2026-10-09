@@ -8,7 +8,7 @@ homepage.workspace = true
 authors.workspace = true
 
 description = "3D transform components for the Kodanu game engine."
-keywords = ["game-engine", "gamedev", "transform"]
+keywords = ["game-engine", "gamedev", "transform", "graphics"]
 categories = ["game-development"]
 
 [lib]
