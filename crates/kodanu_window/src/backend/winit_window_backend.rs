@@ -25,17 +25,20 @@ impl WindowFrontend for WinitWindowBackend {
 }
 
 impl WindowHandle for WinitWindowBackend {
-    fn target(&self) -> SurfaceTarget {
-        SurfaceTarget::new(
-            self.window
-                .display_handle()
-                .unwrap_or_else(|_| panic!("{}", WindowHandlerError::RawDisplayHandle))
-                .as_raw(),
-            self.window
-                .window_handle()
-                .unwrap_or_else(|_| panic!("{}", WindowHandlerError::RawWindowHandle))
-                .as_raw(),
-        )
+    fn target(&self) -> Result<SurfaceTarget, WindowHandlerError> {
+        let window = self
+            .window
+            .display_handle()
+            .map_err(|_| WindowHandlerError::RawDisplayHandle)?
+            .as_raw();
+
+        let display = self
+            .window
+            .window_handle()
+            .map_err(|_| WindowHandlerError::RawWindowHandle)?
+            .as_raw();
+
+        Ok(SurfaceTarget::new(window, display))
     }
 }
 

@@ -11,4 +11,5 @@ pub enum WindowEvent {
     MouseInput(MouseEvent),
     PointerMoved(MousePosition),
     MouseWheel(MouseWheelEvent),
+    Unknown,
 }

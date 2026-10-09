@@ -1,14 +1,14 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct WindowId(u32);
+pub struct WindowId(usize);
 
 impl WindowId {
-    pub fn new(id: u32) -> Self {
+    pub fn new(id: usize) -> Self {
         Self(id)
     }
 }
 
 impl WindowId {
-    pub fn id(&self) -> u32 {
+    pub fn id(&self) -> usize {
         self.0
     }
 }

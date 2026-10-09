@@ -1,4 +1,7 @@
-use std::fmt::{Display, Formatter, Result};
+use std::{
+    error::Error,
+    fmt::{Display, Formatter, Result},
+};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum WindowHandlerError {
@@ -18,3 +21,5 @@ impl Display for WindowHandlerError {
         }
     }
 }
+
+impl Error for WindowHandlerError {}

@@ -43,7 +43,7 @@ impl WinitEventConverter {
                     )))
                 }
             },
-            _ => None,
+            _ => Some(WindowEvent::Unknown),
         }
     }
 

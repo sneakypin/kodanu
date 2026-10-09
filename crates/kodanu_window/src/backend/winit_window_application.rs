@@ -51,7 +51,7 @@ impl<A: WindowApplication> WinitApplicationHandler for WinitWindowApplication<A>
         };
 
         self.application
-            .event(event, WindowId::new(window_id.into_raw() as u32));
+            .event(event, WindowId::new(window_id.into_raw()));
 
         if let WindowEvent::CloseRequested = event {
             event_loop.exit();

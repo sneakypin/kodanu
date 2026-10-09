@@ -38,7 +38,7 @@ impl App {
 impl WindowApplication for App {
     fn start(&mut self, window: &impl WindowFrontend, handle: &impl WindowHandle) {
         let descriptor =
-            InstanceDescriptor::with(Backend::default(), handle.target(), window.size());
+            InstanceDescriptor::with(Backend::default(), handle.target().unwrap(), window.size());
 
         self.world.with_res(block_on(Instance::new(descriptor)));
 
@@ -75,6 +75,7 @@ impl WindowApplication for App {
             WindowEvent::MouseWheel(delta) => {
                 cell.expect_mut_event::<MouseWheelEvent>().send(delta);
             }
+            _ => {}
         }
     }
 }

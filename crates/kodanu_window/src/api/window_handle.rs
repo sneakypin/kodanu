@@ -1,5 +1,5 @@
-use crate::SurfaceTarget;
+use crate::{SurfaceTarget, WindowHandlerError};
 
 pub trait WindowHandle {
-    fn target(&self) -> SurfaceTarget;
+    fn target(&self) -> Result<SurfaceTarget, WindowHandlerError>;
 }
