@@ -1,6 +1,7 @@
 use {
     kodanu_ecs::Component,
     kodanu_math::{Mat4, Quat, Vec3},
+    serde::{Deserialize, Serialize},
 };
 
 /// Describes the position, rotation, and scale of an entity in 3D space.
@@ -27,7 +28,7 @@ use {
 /// assert_eq!(transform.position(), Vec3::new(10.0, 0.0, 5.0));
 /// assert_eq!(transform.scale(), Vec3::ONE);
 /// ```
-#[derive(Component, Debug, Clone)]
+#[derive(Component, Debug, Clone, Serialize, Deserialize)]
 pub struct Transform {
     position: Vec3,
     rotation: Quat,

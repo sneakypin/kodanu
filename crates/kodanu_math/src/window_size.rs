@@ -1,4 +1,7 @@
-use std::fmt::{Display, Formatter, Result};
+use {
+    serde::{Deserialize, Serialize},
+    std::fmt::{Display, Formatter, Result},
+};
 
 /// The size of a window in physical pixels.
 ///
@@ -7,7 +10,7 @@ use std::fmt::{Display, Formatter, Result};
 /// # Coordinate Order
 ///
 /// Dimensions are represented as `(width, height)`.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct WindowSize {
     width: u32,
     height: u32,

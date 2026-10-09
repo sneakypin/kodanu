@@ -1,6 +1,9 @@
 use crate::Vec3;
 
-use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
+use {
+    serde::{Deserialize, Serialize},
+    std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign},
+};
 
 /// A four-dimensional vector with `f32` components.
 ///
@@ -9,7 +12,7 @@ use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssi
 ///
 /// Arithmetic operators applied to two vectors perform component-wise
 /// operations.
-#[derive(Default, Debug, Clone, Copy, PartialEq)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct Vec4 {
     /// The x component of the vector.
     pub x: f32,

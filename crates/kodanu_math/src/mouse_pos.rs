@@ -1,4 +1,8 @@
-use {kodanu_ecs::Event, std::ops::Sub};
+use {
+    kodanu_ecs::Event,
+    serde::{Deserialize, Serialize},
+    std::ops::Sub,
+};
 
 /// Represents the mouse cursor position in window coordinates.
 ///
@@ -15,7 +19,7 @@ use {kodanu_ecs::Event, std::ops::Sub};
 /// assert_eq!(position.x(), 640.0);
 /// assert_eq!(position.y(), 360.0);
 /// ```
-#[derive(Event, Default, Debug, Clone, Copy, PartialEq)]
+#[derive(Event, Default, Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct MousePos {
     x: f32,
     y: f32,

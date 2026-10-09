@@ -794,6 +794,7 @@ name = "kodanu_math"
 version = "1.0.0"
 dependencies = [
  "kodanu_ecs",
+ "serde",
 ]
 
 [[package]]
@@ -835,6 +836,7 @@ version = "1.0.0"
 dependencies = [
  "kodanu_ecs",
  "kodanu_math",
+ "serde",
 ]
 
 [[package]]

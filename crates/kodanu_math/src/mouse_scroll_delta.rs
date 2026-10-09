@@ -1,3 +1,5 @@
+use serde::{Deserialize, Serialize};
+
 /// Represents a mouse scroll offset.
 ///
 /// The meaning of the values depends on the [`crate::MouseScroll`] variant
@@ -6,7 +8,7 @@
 /// Positive and negative values represent opposite scroll directions.
 /// The exact direction depends on the input backend and engine
 /// coordinate convention.
-#[derive(Default, Debug, Clone, Copy, PartialEq)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct MouseScrollDelta {
     x: f32,
     y: f32,

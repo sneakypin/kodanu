@@ -1,6 +1,9 @@
 use crate::MousePos;
 
-use std::ops::AddAssign;
+use {
+    serde::{Deserialize, Serialize},
+    std::ops::AddAssign,
+};
 
 /// Represents a mouse movement delta in window coordinates.
 ///
@@ -22,7 +25,7 @@ use std::ops::AddAssign;
 /// assert_eq!(delta.x(), 5.0);
 /// assert_eq!(delta.y(), 1.0);
 /// ```
-#[derive(Default, Debug, Clone, Copy, PartialEq)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct MouseDelta {
     x: f32,
     y: f32,

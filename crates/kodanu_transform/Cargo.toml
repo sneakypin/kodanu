@@ -19,5 +19,7 @@ all-features = true
 rustdoc-args = ["--document-private-items"]
 
 [dependencies]
+serde = { workspace = true }
+
 kodanu_math = { workspace = true }
 kodanu_ecs = { workspace = true }

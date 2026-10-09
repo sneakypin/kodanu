@@ -1,4 +1,7 @@
-use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
+use {
+    serde::{Deserialize, Serialize},
+    std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign},
+};
 
 /// A three-dimensional vector with `f32` components.
 ///
@@ -10,7 +13,7 @@ use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssi
 ///
 /// The directional constants use the following coordinate convention:
 /// positive Y is up, positive X is right, and negative Z is forward.
-#[derive(Default, Debug, Clone, Copy, PartialEq)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct Vec3 {
     /// The x component of the vector.
     pub x: f32,

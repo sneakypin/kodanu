@@ -1,6 +1,9 @@
 use crate::{Quat, Vec3, Vec4};
 
-use std::ops::{Mul, MulAssign};
+use {
+    serde::{Deserialize, Serialize},
+    std::ops::{Mul, MulAssign},
+};
 
 /// A 4×4 matrix with `f32` components.
 ///
@@ -24,7 +27,7 @@ use std::ops::{Mul, MulAssign};
 ///
 /// assert_eq!(point, Vec3::new(2.0, 3.0, 4.0));
 /// ```
-#[derive(Default, Debug, Clone, Copy, PartialEq)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct Mat4 {
     /// The first column of the matrix.
     pub x_axis: Vec4,

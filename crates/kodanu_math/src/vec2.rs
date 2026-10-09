@@ -1,4 +1,7 @@
-use std::ops::{Add, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
+use {
+    serde::{Deserialize, Serialize},
+    std::ops::{Add, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign},
+};
 
 /// A two-dimensional vector with `f32` components.
 ///
@@ -20,7 +23,7 @@ use std::ops::{Add, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 ///
 /// assert_eq!(result, Vec2::new(12.0, 8.0));
 /// ```
-#[derive(Default, Debug, Clone, Copy, PartialEq)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct Vec2 {
     /// The horizontal component of the vector.
     pub x: f32,

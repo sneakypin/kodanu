@@ -1,11 +1,13 @@
 use crate::MouseScrollDelta;
 
+use serde::{Deserialize, Serialize};
+
 /// Describes the unit used by a mouse scroll event.
 ///
 /// Mouse scroll input can be reported either as discrete lines
 /// or as a continuous pixel offset.
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub enum MouseScroll {
     /// Scroll amount reported in logical lines.
     ///

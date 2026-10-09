@@ -1,6 +1,9 @@
 use crate::Vec3;
 
-use std::ops::{Div, DivAssign, Mul, MulAssign, Neg};
+use {
+    serde::{Deserialize, Serialize},
+    std::ops::{Div, DivAssign, Mul, MulAssign, Neg},
+};
 
 /// A quaternion representing a 3D rotation.
 ///
@@ -23,7 +26,7 @@ use std::ops::{Div, DivAssign, Mul, MulAssign, Neg};
 /// assert!(direction.y.abs() < 1e-5);
 /// assert!(direction.z.abs() < 1e-5);
 /// ```
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct Quat {
     /// The x component of the quaternion's vector part.
     pub x: f32,

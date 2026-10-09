@@ -1,4 +1,7 @@
-use kodanu_ecs::Event;
+use {
+    kodanu_ecs::Event,
+    serde::{Deserialize, Serialize},
+};
 
 /// An event emitted when the rendering surface changes size.
 ///
@@ -16,7 +19,7 @@ use kodanu_ecs::Event;
 /// assert_eq!(event.width(), 1280);
 /// assert_eq!(event.height(), 720);
 /// ```
-#[derive(Event, Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Event, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct SurfaceSize {
     width: u32,
     height: u32,
