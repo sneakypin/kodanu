@@ -1,6 +1,6 @@
 use crate::{
     Bundle, Component, ComponentRegistry, Entity, EntityAllocator, Event, EventBuffer,
-    EventRegistry, Resource, ResourceRegistry, SparseSet, WorldCell, WorldError,
+    EventRegistry, Resource, ResourceRegistry, SparseSet, Tick, WorldCell, WorldError,
 };
 
 #[derive(Default)]
@@ -9,7 +9,7 @@ pub struct World {
     storages: ComponentRegistry,
     resources: ResourceRegistry,
     events: EventRegistry,
-    tick: u64,
+    tick: Tick,
 }
 
 impl World {
@@ -19,7 +19,7 @@ impl World {
             storages: ComponentRegistry::with_capacity(capacity),
             resources: ResourceRegistry::with_capacity(capacity),
             events: EventRegistry::with_capacity(capacity),
-            tick: 0,
+            tick: Tick::ZERO,
         }
     }
 }
@@ -76,15 +76,12 @@ impl World {
         storage.get_mut(entity.index())
     }
 
-    pub fn change_tick(&self) -> u64 {
+    pub fn change_tick(&self) -> Tick {
         self.tick
     }
 
     pub fn advance_change_tick(&mut self) {
-        self.tick = self
-            .tick
-            .checked_add(1)
-            .expect("world change tick overflow");
+        self.tick.increment();
     }
 
     pub(crate) fn storage<C: Component>(&self) -> Option<&SparseSet<C>> {

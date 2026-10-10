@@ -1,4 +1,4 @@
-use crate::{Bundle, Component, Entity, Event, EventBuffer, Resource, SparseSet, World};
+use crate::{Bundle, Component, Entity, Event, EventBuffer, Resource, SparseSet, Tick, World};
 
 use std::{marker::PhantomData, ptr::NonNull};
 
@@ -37,7 +37,7 @@ impl<'w> WorldCell<'w> {
         unsafe { (*self.world.as_ptr()).component_mut::<C>(entity) }
     }
 
-    pub fn change_tick(self) -> u64 {
+    pub fn change_tick(self) -> Tick {
         unsafe { self.world.as_ref().change_tick() }
     }
 

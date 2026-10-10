@@ -217,7 +217,6 @@ impl Quat {
     /// A vector with a length less than or equal to `f32::EPSILON`
     /// produces the identity rotation.
     #[must_use]
-
     pub fn from_scaled_axis(axis: Vec3) -> Self {
         let degrees = axis.length();
 

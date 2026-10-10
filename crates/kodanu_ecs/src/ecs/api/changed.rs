@@ -1,6 +1,6 @@
-use crate::{Component, QueryFilter, WorldCell};
+use crate::{Component, QueryFilter, SparseSet, Tick, WorldCell};
 
-use {std::collections::HashSet, std::marker::PhantomData};
+use std::marker::PhantomData;
 
 pub struct Changed<C>(PhantomData<fn() -> C>);
 
@@ -11,24 +11,17 @@ impl<C> Default for Changed<C> {
 }
 
 impl<C: Component> QueryFilter for Changed<C> {
-    type Storage<'w> = HashSet<u32>;
+    type Storage<'w> = (Option<&'w SparseSet<C>>, Tick);
 
     fn fetch<'w>(cell: WorldCell<'w>) -> Self::Storage<'w> {
-        let tick = cell.change_tick();
-        let mut entities = HashSet::new();
-
-        if let Some(storage) = cell.storage::<C>() {
-            for &entity in storage.indices() {
-                if storage.changed_tick(entity) == Some(tick) {
-                    entities.insert(entity);
-                }
-            }
-        }
-
-        entities
+        (cell.storage::<C>(), cell.change_tick())
     }
 
     fn matches(storage: &Self::Storage<'_>, entity: u32) -> bool {
-        storage.contains(&entity)
+        let (Some(set), tick) = storage else {
+            return false;
+        };
+
+        set.changed_tick(entity) == Some(*tick)
     }
 }

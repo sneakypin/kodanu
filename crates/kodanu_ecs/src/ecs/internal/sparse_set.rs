@@ -1,4 +1,4 @@
-use crate::{Component, ComponentStorage, EntityError};
+use crate::{Component, ComponentStorage, EntityError, Tick};
 
 use std::{any::Any, mem::replace};
 
@@ -6,8 +6,8 @@ pub struct SparseSet<C> {
     sparse: Vec<u32>,
     indices: Vec<u32>,
     dense: Vec<C>,
-    added: Vec<u64>,
-    changed: Vec<u64>,
+    added: Vec<Tick>,
+    changed: Vec<Tick>,
 }
 
 impl<C> SparseSet<C> {
@@ -66,10 +66,10 @@ impl<C> SparseSet<C> {
     }
 
     pub fn insert(&mut self, entity: u32, component: C) -> Option<C> {
-        self.insert_at(entity, component, 0)
+        self.insert_at(entity, component, Tick::ZERO)
     }
 
-    pub fn insert_at(&mut self, entity: u32, component: C, tick: u64) -> Option<C> {
+    pub fn insert_at(&mut self, entity: u32, component: C, tick: Tick) -> Option<C> {
         self.ensure_capacity(entity);
 
         if let Some(dense) = self.dense_index(entity) {
@@ -131,23 +131,23 @@ impl<C> SparseSet<C> {
 }
 
 impl<C> SparseSet<C> {
-    pub fn mark_changed_dense(&mut self, dense: usize, tick: u64) {
+    pub fn mark_changed_dense(&mut self, dense: usize, tick: Tick) {
         if let Some(changed_tick) = self.changed.get_mut(dense) {
             *changed_tick = tick;
         }
     }
 
-    pub fn added_tick(&self, entity: u32) -> Option<u64> {
+    pub fn added_tick(&self, entity: u32) -> Option<Tick> {
         let dense = self.dense_index(entity)?;
         self.added.get(dense).copied()
     }
 
-    pub fn changed_tick(&self, entity: u32) -> Option<u64> {
+    pub fn changed_tick(&self, entity: u32) -> Option<Tick> {
         let dense = self.dense_index(entity)?;
         self.changed.get(dense).copied()
     }
 
-    pub fn mark_changed(&mut self, entity: u32, tick: u64) -> bool {
+    pub fn mark_changed(&mut self, entity: u32, tick: Tick) -> bool {
         let Some(dense) = self.dense_index(entity) else {
             return false;
         };

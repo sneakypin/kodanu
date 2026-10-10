@@ -1,4 +1,4 @@
-use crate::{Component, ComponentStorage, ComponentStorageError, SparseSet};
+use crate::{Component, ComponentStorage, ComponentStorageError, SparseSet, Tick};
 
 use {std::any::TypeId, std::collections::HashMap};
 
@@ -16,7 +16,7 @@ impl ComponentRegistry {
 }
 
 impl ComponentRegistry {
-    pub fn push<C: Component>(&mut self, entity: u32, component: C, tick: u64) {
+    pub fn push<C: Component>(&mut self, entity: u32, component: C, tick: Tick) {
         self.storage_or_insert_mut::<C>()
             .insert_at(entity, component, tick);
     }
@@ -35,7 +35,7 @@ impl ComponentRegistry {
         self.get_storage::<C>()?.get(entity)
     }
 
-     #[allow(dead_code)]
+    #[allow(dead_code)]
     pub fn get_mut<C: Component>(&mut self, entity: u32) -> Option<&mut C> {
         self.get_storage_mut::<C>()?.get_mut(entity)
     }

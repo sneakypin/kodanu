@@ -1,19 +1,19 @@
-use crate::{Component, QueryError, QueryStorage, SparseSet};
+use crate::{Component, QueryError, QueryStorage, SparseSet, Tick};
 
 use std::{marker::PhantomData, ptr::NonNull};
 
 pub struct WriteStorage<'w, C: Component> {
     storage: Option<NonNull<SparseSet<C>>>,
-    tick: u64,
     marker: PhantomData<&'w mut SparseSet<C>>,
+    tick: Tick,
 }
 
 impl<'w, C: Component> WriteStorage<'w, C> {
-    pub fn new(storage: Option<&'w mut SparseSet<C>>, tick: u64) -> Self {
+    pub fn new(storage: Option<&'w mut SparseSet<C>>, tick: Tick) -> Self {
         Self {
             storage: storage.map(NonNull::from),
-            tick,
             marker: PhantomData,
+            tick,
         }
     }
 }
